@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import useFormHandler, {
   UseFormHandlerProps,
   UseFormHandlerReturn,
-} from 'hooks/useFormHandler';
+} from '../hooks/useFormHandler';
 
 export interface FormProviderProps<T extends Record<string, any> = Record<string, any>>
   extends UseFormHandlerProps<T> {}

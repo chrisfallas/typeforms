@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { UseFormHandlerProps, UseFormHandlerReturn } from 'hooks/useFormHandler';
+import { UseFormHandlerProps, UseFormHandlerReturn } from '../hooks/useFormHandler';
 export interface FormProviderProps<T extends Record<string, any> = Record<string, any>> extends UseFormHandlerProps<T> {
 }
 /**

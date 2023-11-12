@@ -1,4 +1,4 @@
-import FormProvider, { FormProviderProps } from 'providers/FormProvider';
+import FormProvider, { FormProviderProps } from '../providers/FormProvider';
 import { PropsWithChildren } from 'react';
 
 export interface FormProps<T extends Record<string, any> = Record<string, any>>
