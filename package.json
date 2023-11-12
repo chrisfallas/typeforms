@@ -1,0 +1,52 @@
+{
+  "name": "typeforms",
+  "author": "chrisfallas",
+  "maintainers": [
+    "chrisfallas <chrisfallas.ch@gmail.com>"
+  ],
+  "description": "Build type-safe React forms, keeping your code clean",
+  "version": "1.0.0",
+  "keywords": [
+    "react",
+    "typescript",
+    "forms",
+    "type-safe",
+    "type",
+    "safe",
+    "state",
+    "manager"
+  ],
+  "license": "ISC",
+  "files": [
+    "dist"
+  ],
+  "main": "dist/index.js",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "uuid": ">=7.0.0"
+  },
+  "devDependencies": {
+    "bun-types": "^1.0.11",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.1.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.0.0",
+    "@types/react": ">=17.0.0",
+    "@types/uuid": ">=7.0.0"
+  },
+  "scripts": {
+    "postinstall": "node -e \"try {require('husky').install('./.husky');} catch (e) {}\"",
+    "build": "bun build:js && bun run build:types",
+    "build:js": "bun build ./src/index.ts --outdir ./dist --target=node --external react --external uuid --minify",
+    "build:types": "tsc --project tsconfig.json",
+    "prettier": "prettier --write \"src/**/*.+(ts|tsx|js|jsx|json|css|scss|saas|html|md)\""
+  }
+}

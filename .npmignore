@@ -1,0 +1,10 @@
+.husky
+node_modules
+src
+.git
+.gitignore
+.lintstagedrc.json
+.npmignore
+.prettierrc
+bun.lockb
+tsconfig.json
