@@ -44,9 +44,11 @@
   },
   "scripts": {
     "postinstall": "node -e \"try {require('husky').install('./.husky');} catch (e) {}\"",
-    "build": "bun build:js && bun run build:types",
-    "build:js": "bun build ./src/index.ts --outdir ./dist --target=node --external react --external uuid --minify",
+    "build": "bun build:lib && bun run build:types",
+    "build:lib": "bun build ./src/index.ts --outdir ./dist --target=node --external react --external uuid --minify",
     "build:types": "tsc --project tsconfig.json",
+    "dev:lib": "bun build ./src/index.ts --outdir ./dist --target=node --external react --external uuid --minify --watch",
+    "dev:types": "tsc --project tsconfig.json --watch",
     "prettier": "prettier --write \"src/**/*.+(ts|tsx|js|jsx|json|css|scss|saas|html|md)\""
   }
 }

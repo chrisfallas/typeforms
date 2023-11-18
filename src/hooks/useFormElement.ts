@@ -1,20 +1,15 @@
 import useFormContext from './useFormContext';
-import { UseFormHandlerReturn } from './useFormHandler';
-
-export interface UseFormElementReturn<
-  T extends Record<string, any> = Record<string, any>,
-> {
-  value: ReturnType<UseFormHandlerReturn<T>['getValue']>;
-}
+import { UseFormElementReturn } from '../types/UseFormElement';
 
 const useFormElement = <T extends Record<string, any> = Record<string, any>>(
-  name: keyof T,
+  name: Extract<keyof T, string>,
 ): UseFormElementReturn<T> => {
-  const { getValue } = useFormContext<T>();
+  const { formId, getValue } = useFormContext<T>();
 
+  const id = `${formId}-${name}`;
   const value = getValue(name);
 
-  return { value };
+  return { id, value };
 };
 
 export default useFormElement;

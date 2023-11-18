@@ -1,17 +1,5 @@
 import { useState } from 'react';
-
-export interface UseFormHandlerProps<
-  T extends Record<string, any> = Record<string, any>,
-> {
-  initialValues?: Partial<T>;
-}
-
-export interface UseFormHandlerReturn<
-  T extends Record<string, any> = Record<string, any>,
-> {
-  state: Partial<T>;
-  getValue: <K extends keyof T>(name: K) => T[K] | undefined;
-}
+import { UseFormHandlerProps, UseFormHandlerReturn } from '../types/UseFormHandler';
 
 /**
  * Internal hook to handle form state.

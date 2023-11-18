@@ -1,21 +1,13 @@
-import Form, { FormProps } from './components/Form';
-import Input, { InputProps } from './components/Input';
-import NestedForm, { NestedFormProps } from './components/NestedForm';
-import Select, { SelectProps } from './components/Select';
-import TextArea, { TextAreaProps } from './components/TextArea';
-import useFormContext from './hooks/useFormContext';
-import useFormElement, { UseFormElementReturn } from './hooks/useFormElement';
-import { FormContextValues } from './providers/FormProvider';
-import TypeFormTypes from './types/TypeForm';
-
-const TypeForm = <T extends Record<string, any>>() => ({
-  Form: Form<T>,
-  Input: Input as TypeFormTypes<T>['Input'],
-});
+import { TypeForm } from './utils/TypeForm';
+import { FormProps } from './types/Form';
+import { InputProps } from './types/Input';
+import { NestedFormProps } from './components/NestedForm';
+import { SelectProps } from './components/Select';
+import { TextAreaProps } from './components/TextArea';
+import { UseFormElementReturn } from './types/UseFormElement';
+import { FormContextValues } from './types/FormProvider';
 
 export default TypeForm;
-
-export { Form, NestedForm, Input, TextArea, Select, useFormContext, useFormElement };
 
 export type {
   FormProps,

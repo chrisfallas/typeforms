@@ -1,12 +1,10 @@
-import { createContext, useState, PropsWithChildren } from 'react';
+import { useState, PropsWithChildren, createContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import useFormHandler, {
-  UseFormHandlerProps,
-  UseFormHandlerReturn,
-} from '../hooks/useFormHandler';
+import useFormHandler from '../hooks/useFormHandler';
+import { FormContextValues } from '../types/FormProvider';
+import { FormProviderProps } from '../types/FormProvider';
 
-export interface FormProviderProps<T extends Record<string, any> = Record<string, any>>
-  extends UseFormHandlerProps<T> {}
+export const FormContext = createContext<FormContextValues>(null as any);
 
 /**
  * Internal context provider to pass down to form elements the form state and handlers.
@@ -29,16 +27,5 @@ const FormProvider = <T extends Record<string, any> = Record<string, any>>({
 
   return <FormContext.Provider value={formValues}>{children}</FormContext.Provider>;
 };
-
-export interface FormContextValues<T extends Record<string, any> = Record<string, any>>
-  extends UseFormHandlerReturn<T> {
-  formId: string;
-}
-
-export const FormContext = createContext<FormContextValues>({
-  formId: '',
-  state: {},
-  getValue: () => ({}),
-});
 
 export default FormProvider;
