@@ -4,11 +4,21 @@ import { FormProps } from '../types/Form';
 const Form = <T extends Record<string, any> = Record<string, any>>(
   props: FormProps<T>,
 ) => {
-  const { children, ...rest } = props;
+  const { initialValues, schemaValidation, onChange, onSubmit, children, id, ...rest } =
+    props;
   return (
-    <FormProvider<T> {...rest}>
-      <form {...rest}>{children}</form>
-    </FormProvider>
+    <FormProvider<T>
+      customFormId={id}
+      initialValues={initialValues}
+      schemaValidation={schemaValidation}
+      onChange={onChange}
+      onSubmit={onSubmit}
+      render={({ formId, onSubmit }) => (
+        <form id={formId} onSubmit={onSubmit} {...rest}>
+          {children}
+        </form>
+      )}
+    />
   );
 };
 

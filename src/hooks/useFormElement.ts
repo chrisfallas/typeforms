@@ -4,12 +4,16 @@ import { UseFormElementReturn } from '../types/UseFormElement';
 const useFormElement = <T extends Record<string, any> = Record<string, any>>(
   name: Extract<keyof T, string>,
 ): UseFormElementReturn<T> => {
-  const { formId, getValue } = useFormContext<T>();
+  const formContext = useFormContext<T>();
 
-  const id = `${formId}-${name}`;
-  const value = getValue(name);
+  const id = `${formContext.formId}-${name}`;
+  const value = formContext.getValue(name);
 
-  return { id, value };
+  const setValue: UseFormElementReturn<T>['setValue'] = async (value) => {
+    formContext.setValue(name, value);
+  };
+
+  return { id, value, setValue, onChange: formContext.onChange };
 };
 
 export default useFormElement;

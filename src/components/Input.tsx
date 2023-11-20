@@ -1,4 +1,4 @@
-import { InputHTMLAttributes } from 'react';
+import { ChangeEventHandler, InputHTMLAttributes } from 'react';
 import useFormElement from '../hooks/useFormElement';
 import { RenderProp } from '../types/Global';
 import { InputProps } from '../types/Input';
@@ -12,13 +12,14 @@ const Input = <
   const {
     id,
     name,
-    onChange,
+    onChange: onChangeCallback,
     label,
     labelId,
     labelClassName,
     labelRef,
     labelWrap,
     labelPlacement,
+    render,
     ...htmlInputProps
   } = props;
 
@@ -26,16 +27,22 @@ const Input = <
 
   const formElementId = id || formElement.id;
 
+  const onChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    formElement.onChange(event);
+    onChangeCallback?.(event.target.value as T[K]);
+  };
+
   if (props.children) return props.children;
 
   const inputComponentProps = {
     ...htmlInputProps,
     id: formElementId,
     name,
-    value: value ? +value : '',
+    value: String(value ?? ''),
+    onChange,
   };
 
-  if (props.render) return props.render(inputComponentProps);
+  if (render) return render(inputComponentProps);
 
   const inputComponent = <input {...inputComponentProps} />;
 

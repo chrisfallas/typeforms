@@ -5,4 +5,6 @@ export interface UseFormElementReturn<
 > {
   id: string;
   value: ReturnType<UseFormHandlerReturn<T>['getValue']>;
+  setValue: <K extends Extract<keyof T, string>>(value: T[K]) => Promise<void>;
+  onChange: UseFormHandlerReturn<T>['onChange'];
 }
