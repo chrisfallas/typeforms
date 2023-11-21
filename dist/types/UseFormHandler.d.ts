@@ -13,6 +13,7 @@ export interface UseFormHandlerProps<T extends Record<string, any> = Record<stri
 }
 export interface UseFormHandlerReturn<T extends Record<string, any> = Record<string, any>> {
     data: Partial<T>;
+    isDirty: boolean;
     getValue: <K extends KeyOf<T>>(name: K) => T[K] | undefined;
     setValue: <K extends KeyOf<T>>(name: K, value: T[K]) => Promise<void>;
     setValues: <K extends KeyOf<T>>(values: Array<{

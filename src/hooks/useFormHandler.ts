@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { UseFormHandlerProps, UseFormHandlerReturn } from '../types/UseFormHandler';
 import { KeyOf } from '../types/Global';
 
@@ -45,8 +45,15 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
     onSubmitCallback?.({ ok: true, data: data as T });
   };
 
+  const isDirty = useMemo(() => {
+    const stringifiedInitialValues = JSON.stringify(initialValues);
+    const stringifiedData = JSON.stringify(data);
+    return stringifiedInitialValues !== stringifiedData;
+  }, [initialValues, data]);
+
   const formValues: UseFormHandlerReturn<T> = {
     data,
+    isDirty,
     getValue,
     setValue,
     setValues,
