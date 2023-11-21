@@ -1,8 +1,9 @@
 import useFormContext from './useFormContext';
 import { UseFormElementReturn } from '../types/UseFormElement';
+import { KeyOf } from '../types/Global';
 
 const useFormElement = <T extends Record<string, any> = Record<string, any>>(
-  name: Extract<keyof T, string>,
+  name: KeyOf<T>,
 ): UseFormElementReturn<T> => {
   const formContext = useFormContext<T>();
 

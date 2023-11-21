@@ -1,13 +1,13 @@
-import { ChangeEventHandler, InputHTMLAttributes } from 'react';
+import { ChangeEventHandler } from 'react';
 import useFormElement from '../hooks/useFormElement';
-import { RenderProp } from '../types/Global';
-import { InputProps } from '../types/Input';
+import { KeyOf, RenderProp } from '../types/Global';
+import { HTMLInputProps, InputProps } from '../types/Input';
 
 const Input = <
   T extends Record<string, any> = Record<string, any>,
-  K extends Extract<keyof T, string> = Extract<keyof T, string>,
+  K extends KeyOf<T> = KeyOf<T>,
 >(
-  props: InputProps<T, K> & RenderProp<InputHTMLAttributes<HTMLInputElement>>,
+  props: InputProps<T, K> & RenderProp<HTMLInputProps>,
 ) => {
   const {
     id,
@@ -34,7 +34,7 @@ const Input = <
 
   if (props.children) return props.children;
 
-  const inputComponentProps = {
+  const inputComponentProps: HTMLInputProps = {
     ...htmlInputProps,
     id: formElementId,
     name,
@@ -63,19 +63,19 @@ const Input = <
     </label>
   );
 
-  if (labelPlacement === 'top') {
+  if (labelPlacement === 'bottom') {
     return (
       <>
-        {labelComponent}
         {inputComponent}
+        {labelComponent}
       </>
     );
   }
 
   return (
     <>
-      {inputComponent}
       {labelComponent}
+      {inputComponent}
     </>
   );
 };

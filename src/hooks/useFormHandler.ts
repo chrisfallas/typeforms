@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { UseFormHandlerProps, UseFormHandlerReturn } from '../types/UseFormHandler';
+import { KeyOf } from '../types/Global';
 
 /**
  * Internal hook to handle form state.
@@ -19,7 +20,8 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
     setData((prev) => {
       const newData = { ...prev };
       values.forEach(({ name, value }) => {
-        newData[name] = value; // TODO: support dot notation
+        if (['', undefined, null].includes(value)) newData[name] = undefined;
+        else newData[name] = value; // TODO: support dot notation
       });
       onChangeCallback?.(newData);
       return newData;
@@ -27,14 +29,13 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
   };
 
   const setValue: UseFormHandlerReturn<T>['setValue'] = async (name, value) => {
-    setValues([{ name, value }]);
+    if (value !== getValue(name)) setValues([{ name, value }]);
   };
 
   const onChange: UseFormHandlerReturn<T>['onChange'] = async (event) => {
-    const name = event.target.name as Extract<keyof T, string>;
+    const name = event.target.name as KeyOf<T>;
     let value: any = event.target.value;
-    if (['', undefined, null].includes(value)) value = undefined;
-    else if (event.target.type === 'number') value = Number(value);
+    if (value && event.target.type === 'number') value = Number(value);
     setValue(name, value);
   };
 

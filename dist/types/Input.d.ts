@@ -1,8 +1,8 @@
-import { PropsWithChildren } from 'react';
-import { LabelProps, RecordKey } from './Global';
-export type HTMLInputProps = JSX.IntrinsicAttributes & React.InputHTMLAttributes<HTMLInputElement>;
-export type InputOwnProps<K extends RecordKey = string, V = any> = {
-    name: K;
-    onChange?: (value: V | undefined) => void;
-};
-export type InputProps<T extends Record<string, any> = Record<string, any>, K extends Extract<keyof T, string> = Extract<keyof T, string>> = PropsWithChildren<InputOwnProps<K, T[K]> & Omit<HTMLInputProps, keyof InputOwnProps> & LabelProps>;
+import { DetailedHTMLProps, InputHTMLAttributes } from 'react';
+import { LabelProps, KeyOf } from './Global';
+import { FormElementProps } from './Element';
+export type HTMLInputProps = DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
+export interface InputOwnProps<K extends KeyOf = KeyOf, V = any> extends FormElementProps<K, V> {
+}
+export interface InputProps<T extends Record<string, any> = Record<string, any>, K extends KeyOf<T> = KeyOf<T>> extends InputOwnProps<K, T[K]>, Omit<HTMLInputProps, keyof InputOwnProps>, LabelProps {
+}

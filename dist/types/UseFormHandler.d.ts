@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent } from 'react';
 import { FormSchemaValidatorFunction, FormSchemaValidatorObject } from './Form';
 import { FormElement } from './Element';
+import { KeyOf } from './Global';
 export interface UseFormHandlerProps<T extends Record<string, any> = Record<string, any>> {
     initialValues?: Partial<T>;
     schemaValidation?: FormSchemaValidatorFunction<T> | FormSchemaValidatorObject<T>;
@@ -12,9 +13,9 @@ export interface UseFormHandlerProps<T extends Record<string, any> = Record<stri
 }
 export interface UseFormHandlerReturn<T extends Record<string, any> = Record<string, any>> {
     data: Partial<T>;
-    getValue: <K extends Extract<keyof T, string>>(name: K) => T[K] | undefined;
-    setValue: <K extends Extract<keyof T, string>>(name: K, value: T[K]) => Promise<void>;
-    setValues: <K extends Extract<keyof T, string>>(values: Array<{
+    getValue: <K extends KeyOf<T>>(name: K) => T[K] | undefined;
+    setValue: <K extends KeyOf<T>>(name: K, value: T[K]) => Promise<void>;
+    setValues: <K extends KeyOf<T>>(values: Array<{
         name: K;
         value: T[K];
         validate?: boolean;
