@@ -32,8 +32,6 @@ const Input = <
     onChangeCallback?.(event.target.value as T[K]);
   };
 
-  if (props.children) return props.children;
-
   const inputComponentProps: HTMLInputProps = {
     ...htmlInputProps,
     id: formElementId,

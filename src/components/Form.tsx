@@ -1,11 +1,22 @@
 import FormProvider from '../providers/FormProvider';
 import { FormProps } from '../types/Form';
+import { FormContextValues } from '../types/FormProvider';
+import { RenderProp } from '../types/Global';
 
 const Form = <T extends Record<string, any> = Record<string, any>>(
-  props: FormProps<T>,
+  props: FormProps<T> & RenderProp<FormContextValues<T>>,
 ) => {
-  const { initialValues, schemaValidation, onChange, onSubmit, children, id, ...rest } =
-    props;
+  const {
+    initialValues,
+    schemaValidation,
+    onChange,
+    onSubmit,
+    children,
+    id,
+    render,
+    ...rest
+  } = props;
+
   return (
     <FormProvider<T>
       customFormId={id}
@@ -13,9 +24,9 @@ const Form = <T extends Record<string, any> = Record<string, any>>(
       schemaValidation={schemaValidation}
       onChange={onChange}
       onSubmit={onSubmit}
-      render={({ formId, onSubmit }) => (
-        <form id={formId} onSubmit={onSubmit} {...rest}>
-          {children}
+      render={(context) => (
+        <form id={context.formId} onSubmit={context.onSubmit} {...rest}>
+          {render ? render(context) : children}
         </form>
       )}
     />

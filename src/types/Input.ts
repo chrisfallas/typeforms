@@ -2,9 +2,9 @@ import { DetailedHTMLProps, InputHTMLAttributes, PropsWithChildren } from 'react
 import { LabelProps, KeyOf } from './Global';
 import { FormElementProps } from './Element';
 
-export type HTMLInputProps = DetailedHTMLProps<
-  InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
+export type HTMLInputProps = Omit<
+  DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
+  'children'
 >;
 
 export interface InputOwnProps<K extends KeyOf = KeyOf, V = any>
