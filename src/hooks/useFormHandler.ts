@@ -14,14 +14,15 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
 }: UseFormHandlerProps<T>): UseFormHandlerReturn<T> => {
   const [data, setData] = useState<UseFormHandlerReturn<T>['data']>(initialValues);
 
-  const getValue: UseFormHandlerReturn<T>['getValue'] = (name) => data[name];
+  const getValue: UseFormHandlerReturn<T>['getValue'] = (name) =>
+    name ? data[name] : undefined;
 
   const setValues: UseFormHandlerReturn<T>['setValues'] = async (values) => {
     setData((prev) => {
       const newData = { ...prev };
       values.forEach(({ name, value }) => {
         if (['', undefined, null].includes(value)) newData[name] = undefined;
-        else newData[name] = value; // TODO: support dot notation
+        else if (name && value !== getValue(name)) newData[name] = value;
       });
       onChangeCallback?.(newData);
       return newData;
@@ -29,7 +30,7 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
   };
 
   const setValue: UseFormHandlerReturn<T>['setValue'] = async (name, value) => {
-    if (value !== getValue(name)) setValues([{ name, value }]);
+    if (name && value !== getValue(name)) setValues([{ name, value }]);
   };
 
   const onChange: UseFormHandlerReturn<T>['onChange'] = async (event) => {

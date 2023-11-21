@@ -3,7 +3,7 @@ import { UseFormElementReturn } from '../types/UseFormElement';
 import { KeyOf } from '../types/Global';
 
 const useFormElement = <T extends Record<string, any> = Record<string, any>>(
-  name: KeyOf<T>,
+  name?: KeyOf<T>,
 ): UseFormElementReturn<T> => {
   const formContext = useFormContext<T>();
 
@@ -11,7 +11,7 @@ const useFormElement = <T extends Record<string, any> = Record<string, any>>(
   const value = formContext.getValue(name);
 
   const setValue: UseFormElementReturn<T>['setValue'] = async (value) => {
-    formContext.setValue(name, value);
+    if (name) formContext.setValue(name, value);
   };
 
   return { id, value, setValue, onChange: formContext.onChange };

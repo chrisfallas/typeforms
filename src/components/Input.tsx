@@ -12,6 +12,7 @@ const Input = <
   const {
     id,
     name,
+    value: valueProp,
     onChange: onChangeCallback,
     label,
     labelId,
@@ -36,7 +37,7 @@ const Input = <
     ...htmlInputProps,
     id: formElementId,
     name,
-    value: String(value ?? ''),
+    value: name ? String(value ?? '') : valueProp,
     onChange,
   };
 
