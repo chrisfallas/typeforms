@@ -1,4 +1,4 @@
-import { ChangeEventHandler } from 'react';
+import { ChangeEventHandler, FocusEventHandler } from 'react';
 import useFormElement from '../hooks/useFormElement';
 import { KeyOf, RenderProp } from '../types/Global';
 import { HTMLInputProps, InputProps } from '../types/Input';
@@ -14,6 +14,7 @@ const Input = <
     name,
     value: valueProp,
     onChange: onChangeCallback,
+    onBlur: onBlurCallback,
     label,
     labelId,
     labelClassName,
@@ -33,12 +34,18 @@ const Input = <
     onChangeCallback?.(event.target.value as T[K]);
   };
 
+  const onBlur: FocusEventHandler<HTMLInputElement> = (event) => {
+    formElement.onBlur(event);
+    onBlurCallback?.(event);
+  };
+
   const inputComponentProps: HTMLInputProps = {
     ...htmlInputProps,
     id: formElementId,
     name,
     value: name ? String(value ?? '') : valueProp,
     onChange,
+    onBlur,
   };
 
   if (render) return render(inputComponentProps);

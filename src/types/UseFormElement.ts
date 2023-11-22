@@ -8,4 +8,5 @@ export interface UseFormElementReturn<
   value?: ReturnType<UseFormHandlerReturn<T>['getValue']>;
   setValue: <K extends KeyOf<T>>(value: T[K]) => Promise<void>;
   onChange: UseFormHandlerReturn<T>['onChange'];
+  onBlur: UseFormHandlerReturn<T>['onBlur'];
 }

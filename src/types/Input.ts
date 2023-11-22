@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, InputHTMLAttributes, PropsWithChildren } from 'react';
+import { DetailedHTMLProps, InputHTMLAttributes } from 'react';
 import { LabelProps, KeyOf } from './Global';
 import { FormElementProps } from './Element';
 

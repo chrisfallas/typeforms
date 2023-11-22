@@ -14,7 +14,13 @@ const useFormElement = <T extends Record<string, any> = Record<string, any>>(
     if (name) formContext.setValue(name, value);
   };
 
-  return { id, value, setValue, onChange: formContext.onChange };
+  return {
+    id,
+    value,
+    setValue,
+    onChange: formContext.onChange,
+    onBlur: formContext.onBlur,
+  };
 };
 
 export default useFormElement;

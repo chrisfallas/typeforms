@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent } from 'react';
+import { ChangeEvent, FocusEvent, FormEvent } from 'react';
 import { FormSchemaValidatorFunction, FormSchemaValidatorObject } from './Form';
 import { FormElement } from './Element';
 import { KeyOf } from './Global';
@@ -22,6 +22,8 @@ export interface UseFormHandlerReturn<
   setValues: <K extends KeyOf<T>>(
     values: Array<{ name: K; value: T[K]; validate?: boolean }>,
   ) => Promise<void>;
-  onChange: <T extends FormElement = FormElement>(event: ChangeEvent<T>) => Promise<void>;
+  onChange: (event: ChangeEvent<FormElement>) => Promise<void>;
+  onBlur: (event: FocusEvent<FormElement>) => Promise<void>;
   onSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
+  reset: () => Promise<void>;
 }
