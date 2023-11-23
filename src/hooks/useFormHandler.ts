@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   SchemaValidationStrategy,
   UseFormHandlerProps,
@@ -38,6 +38,7 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
     name ? errors[name] : undefined;
 
   const validateWithFunction = async (
+    data: Partial<T>,
     schemaValidationFunction: FormSchemaValidationFunction<T>,
     schemaValidationStrategy: SchemaValidationStrategy<T>,
   ): Promise<typeof errors> => {
@@ -55,10 +56,11 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
   };
 
   const validateWithObject = async (
+    data: Partial<T>,
     schemaValidationObject: FormSchemaValidationObject<T>,
-    schemaValidationStrategy?: SchemaValidationStrategy<T>,
+    schemaValidationStrategy: SchemaValidationStrategy<T>,
   ): Promise<typeof errors> => {
-    const { include, exclude } = schemaValidationStrategy ?? {};
+    const { include, exclude } = schemaValidationStrategy;
     const errorsFound: typeof errors = {};
     for (const field in schemaValidationObject) {
       let needsValidation = true;
@@ -66,59 +68,73 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
       if (exclude && exclude.includes(field as KeyOf<T>)) needsValidation = false;
       if (!needsValidation) continue;
       const validationFunction = schemaValidationObject[field];
-      const value = getValue(field as KeyOf<T>);
+      const value = data[field] as T[KeyOf<T>] | undefined;
       const result = await validationFunction?.(value);
       errorsFound[field as KeyOf<T>] = result;
     }
     return errorsFound;
   };
 
-  const validate: UseFormHandlerReturn<T>['validate'] = async (options) => {
-    const { updateFormState = true, include, exclude } = options ?? {};
-    if (!schemaValidation) return {};
+  const validate: UseFormHandlerReturn<T>['validate'] = async (options = {}) => {
+    const { data, updateFormState = true } = options;
+    if (!schemaValidation || !data) return {};
     let errorsFound: typeof errors;
     if (typeof schemaValidation === 'function') {
-      errorsFound = await validateWithFunction(schemaValidation, { include, exclude });
+      errorsFound = await validateWithFunction(data, schemaValidation, options);
     } else {
-      errorsFound = await validateWithObject(schemaValidation, { include, exclude });
+      errorsFound = await validateWithObject(data, schemaValidation, options);
     }
     if (updateFormState) setErrors((prev) => ({ ...prev, ...errorsFound }));
-    const filteredErrors: typeof errors = {};
+    const errorsWithoutUndefines: typeof errors = {};
     for (const field in errorsFound) {
       const error = errorsFound[field];
-      if (error?.length) filteredErrors[field as KeyOf<T>] = error;
+      if (error?.length) errorsWithoutUndefines[field as KeyOf<T>] = error;
     }
-    return filteredErrors;
+    return errorsWithoutUndefines;
   };
 
   const checkValidationStrategy = (strategy: boolean | SchemaValidationStrategy<T>) => {
-    let needsValidation = false;
+    let isValidationRequired = false;
     let include: SchemaValidationStrategy<T>['include'] | undefined;
     let exclude: SchemaValidationStrategy<T>['exclude'] | undefined;
-    if (typeof strategy === 'boolean') needsValidation = strategy;
+    if (typeof strategy === 'boolean') isValidationRequired = strategy;
     else if (Array.isArray(strategy.include)) {
-      needsValidation = true;
+      isValidationRequired = true;
       include = strategy.include;
     } else if (Array.isArray(strategy.exclude)) {
-      needsValidation = true;
+      isValidationRequired = true;
       exclude = strategy.exclude;
     }
-    return { needsValidation, include, exclude };
+    return { isValidationRequired, include, exclude };
   };
 
   const setValues: UseFormHandlerReturn<T>['setValues'] = async (values) => {
-    setData((prev) => {
-      const newData = { ...prev };
-      let atLeastOneChanged = false;
-      for (const { name, value } of values) {
-        if (!name || value === getValue(name)) continue;
-        atLeastOneChanged = true;
-        if (['', undefined, null].includes(value)) newData[name] = undefined;
-        else newData[name] = value;
-      }
-      if (atLeastOneChanged) onChangeCallback?.(newData);
-      return atLeastOneChanged ? newData : prev;
-    });
+    const { isValidationRequired, include, exclude } =
+      checkValidationStrategy(validateOnChange);
+    const newData: typeof data = {};
+    let fieldsChangingCount = 0;
+    const fieldsThatNeedValidation: Array<KeyOf<T>> = [];
+    for (const { name, value } of values) {
+      if (!name) continue;
+      if (['', undefined, null].includes(value)) newData[name] = undefined;
+      else newData[name] = value;
+      if (newData[name] !== getValue(name)) fieldsChangingCount++;
+      let needsValidation = isValidationRequired;
+      if (include && !include.includes(name)) needsValidation = false;
+      if (exclude && exclude.includes(name)) needsValidation = false;
+      if (!needsValidation) continue;
+      fieldsThatNeedValidation.push(name);
+    }
+    if (fieldsThatNeedValidation.length) {
+      validate({ data: newData, include: fieldsThatNeedValidation });
+    }
+    if (fieldsChangingCount > 0) {
+      setData((prev) => {
+        const allNewData = { ...prev, ...newData };
+        new Promise(() => onChangeCallback?.(allNewData));
+        return allNewData;
+      });
+    }
   };
 
   const setValue: UseFormHandlerReturn<T>['setValue'] = async (name, value) => {
@@ -146,12 +162,12 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
     event.preventDefault();
     setIsSubmitting(true);
     try {
-      const { needsValidation, include, exclude } =
+      const { isValidationRequired, include, exclude } =
         checkValidationStrategy(validateOnSubmit);
-      if (!needsValidation) {
+      if (!isValidationRequired) {
         await onSubmitCallback?.({ ok: true, data: data as T });
       } else {
-        const errorsFound = await validate({ updateFormState: true, include, exclude });
+        const errorsFound = await validate({ data, include, exclude });
         const hasErrors = !!Object.keys(errorsFound).length;
         if (!hasErrors) await onSubmitCallback?.({ ok: true, data: data as T });
         else await onSubmitCallback?.({ ok: false, errors: errorsFound });
@@ -164,7 +180,7 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
   const reset: UseFormHandlerReturn<T>['reset'] = async () => {
     setData(initialValues);
     setErrors({});
-    onChangeCallback?.(initialValues);
+    new Promise(() => onChangeCallback?.(initialValues));
   };
 
   const isDirty = useMemo(() => {

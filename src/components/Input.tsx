@@ -29,14 +29,14 @@ const Input = <
 
   const formElementId = id || formElement.id;
 
-  const onChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+  const onChange: ChangeEventHandler<HTMLInputElement> = async (event) => {
     formElement.onChange(event);
-    onChangeCallback?.(event.target.value as T[K]);
+    new Promise(() => onChangeCallback?.(event.target.value as T[K]));
   };
 
-  const onBlur: FocusEventHandler<HTMLInputElement> = (event) => {
+  const onBlur: FocusEventHandler<HTMLInputElement> = async (event) => {
     formElement.onBlur(event);
-    onBlurCallback?.(event);
+    new Promise(() => onBlurCallback?.(event));
   };
 
   const inputComponentProps: HTMLInputProps = {

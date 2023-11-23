@@ -41,7 +41,7 @@ const FormProvider = <T extends Record<string, any> = Record<string, any>>({
   };
 
   return (
-    <FormContext.Provider value={formValues}>
+    <FormContext.Provider value={formValues as FormContextValues}>
       {render ? render(formValues) : children}
     </FormContext.Provider>
   );

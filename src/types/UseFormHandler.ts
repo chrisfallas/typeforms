@@ -40,6 +40,7 @@ export interface UseFormHandlerReturn<
   onBlur: (event: FocusEvent<FormElement>) => Promise<void>;
   onSubmit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
   validate: (options?: {
+    data?: Partial<T>;
     updateFormState?: boolean;
     include?: SchemaValidationStrategy<T>['include'];
     exclude?: SchemaValidationStrategy<T>['exclude'];
@@ -50,8 +51,8 @@ export interface UseFormHandlerReturn<
 export type SchemaValidationStrategy<
   T extends Record<string, any> = Record<string, any>,
 > = {
-  include?: Array<keyof T>;
-  exclude?: Array<keyof T>;
+  include?: Array<KeyOf<T>>;
+  exclude?: Array<KeyOf<T>>;
 };
 
 type OnSubmitResultSuccess<T extends Record<string, any> = Record<string, any>> = {
