@@ -8,6 +8,9 @@ const Form = <T extends Record<string, any> = Record<string, any>>(
 ) => {
   const {
     initialValues,
+    validateOnSubmit,
+    validateOnChange,
+    validateOnBlur,
     schemaValidation,
     onChange,
     onSubmit,
@@ -21,6 +24,9 @@ const Form = <T extends Record<string, any> = Record<string, any>>(
     <FormProvider<T>
       customFormId={id}
       initialValues={initialValues}
+      validateOnSubmit={validateOnSubmit}
+      validateOnChange={validateOnChange}
+      validateOnBlur={validateOnBlur}
       schemaValidation={schemaValidation}
       onChange={onChange}
       onSubmit={onSubmit}

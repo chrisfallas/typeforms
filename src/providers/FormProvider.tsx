@@ -14,6 +14,9 @@ export const FormContext = createContext<FormContextValues>(null as any);
 const FormProvider = <T extends Record<string, any> = Record<string, any>>({
   customFormId,
   initialValues,
+  validateOnSubmit,
+  validateOnChange,
+  validateOnBlur,
   schemaValidation,
   onChange,
   onSubmit,
@@ -24,6 +27,9 @@ const FormProvider = <T extends Record<string, any> = Record<string, any>>({
 
   const formHandlerValues = useFormHandler<T>({
     initialValues,
+    validateOnSubmit,
+    validateOnChange,
+    validateOnBlur,
     schemaValidation,
     onChange,
     onSubmit,
