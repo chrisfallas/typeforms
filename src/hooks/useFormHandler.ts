@@ -50,7 +50,9 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
       if (include && !include.includes(field as KeyOf<T>)) needsValidation = false;
       if (exclude && exclude.includes(field as KeyOf<T>)) needsValidation = false;
       if (!needsValidation) continue;
-      errorsFound[field as KeyOf<T>] = result[field];
+      if (JSON.stringify(result[field]) !== JSON.stringify(errors[field])) {
+        errorsFound[field as KeyOf<T>] = result[field];
+      }
     }
     return errorsFound;
   };
@@ -70,7 +72,9 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
       const validationFunction = schemaValidationObject[field];
       const value = data[field] as T[KeyOf<T>] | undefined;
       const result = await validationFunction?.(value);
-      errorsFound[field as KeyOf<T>] = result;
+      if (JSON.stringify(result) !== JSON.stringify(errors[field])) {
+        errorsFound[field as KeyOf<T>] = result;
+      }
     }
     return errorsFound;
   };
@@ -84,7 +88,9 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
     } else {
       errorsFound = await validateWithObject(data, schemaValidation, options);
     }
-    if (updateFormState) setErrors((prev) => ({ ...prev, ...errorsFound }));
+    if (updateFormState && Object.keys(errorsFound).length) {
+      setErrors((prev) => ({ ...prev, ...errorsFound }));
+    }
     const errorsWithoutUndefines: typeof errors = {};
     for (const field in errorsFound) {
       const error = errorsFound[field];
