@@ -153,9 +153,13 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
   const onBlur: UseFormHandlerReturn<T>['onBlur'] = async (event) => {
     const name = event.target.name as KeyOf<T> | undefined;
     if (!name) return;
-    const value = getValue(name);
-    console.log('onBlur', name, value);
-    // TODO: validate field if needed
+    const { isValidationRequired, include, exclude } =
+      checkValidationStrategy(validateOnBlur);
+    let needsValidation = isValidationRequired;
+    if (include && !include.includes(name)) needsValidation = false;
+    if (exclude && exclude.includes(name)) needsValidation = false;
+    if (!needsValidation) return;
+    validate({ data, include: [name] });
   };
 
   const onSubmit: UseFormHandlerReturn<T>['onSubmit'] = async (event) => {
@@ -192,6 +196,10 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
   const isValid = useMemo(() => {
     const hasErrors = !!Object.keys(errors).length;
     return !hasErrors;
+  }, [errors]);
+
+  useEffect(() => {
+    console.log('errors', errors);
   }, [errors]);
 
   const formValues: UseFormHandlerReturn<T> = {
