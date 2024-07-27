@@ -10,24 +10,15 @@ const Input = <
   props: InputProps<T, K> & RenderProp<HTMLInputProps>,
 ) => {
   const {
-    id,
     name,
     value: valueProp,
     onChange: onChangeCallback,
     onBlur: onBlurCallback,
-    label,
-    labelId,
-    labelClassName,
-    labelRef,
-    labelWrap,
-    labelPlacement,
     render,
     ...htmlInputProps
   } = props;
 
   const { value, ...formElement } = useFormElement<T>(name);
-
-  const formElementId = id || formElement.id;
 
   const onChange: ChangeEventHandler<HTMLInputElement> = async (event) => {
     formElement.onChange(event);
@@ -41,7 +32,6 @@ const Input = <
 
   const inputComponentProps: HTMLInputProps = {
     ...htmlInputProps,
-    id: formElementId,
     name,
     value: name ? String(value ?? '') : valueProp,
     onChange,
@@ -50,40 +40,7 @@ const Input = <
 
   if (render) return render(inputComponentProps);
 
-  const inputComponent = <input {...inputComponentProps} />;
-
-  if (!label) return inputComponent;
-
-  if (labelWrap === 'wrap') {
-    return (
-      <label id={labelId} className={labelClassName} ref={labelRef}>
-        <span>{label}</span>
-        {inputComponent}
-      </label>
-    );
-  }
-
-  const labelComponent = (
-    <label id={labelId} className={labelClassName} ref={labelRef} htmlFor={formElementId}>
-      <span>{label}</span>
-    </label>
-  );
-
-  if (labelPlacement === 'bottom') {
-    return (
-      <>
-        {inputComponent}
-        {labelComponent}
-      </>
-    );
-  }
-
-  return (
-    <>
-      {labelComponent}
-      {inputComponent}
-    </>
-  );
+  return <input {...inputComponentProps} />;
 };
 
 export default Input;

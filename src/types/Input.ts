@@ -1,5 +1,5 @@
 import { DetailedHTMLProps, InputHTMLAttributes } from 'react';
-import { LabelProps, KeyOf } from './Global';
+import { KeyOf } from './Global';
 import { FormElementProps } from './Element';
 
 export type HTMLInputProps = Omit<
@@ -14,5 +14,4 @@ export interface InputProps<
   T extends Record<string, any> = Record<string, any>,
   K extends KeyOf<T> = KeyOf<T>,
 > extends InputOwnProps<K, T[K]>,
-    Omit<HTMLInputProps, keyof InputOwnProps>,
-    LabelProps {}
+    Omit<HTMLInputProps, keyof InputOwnProps> {}

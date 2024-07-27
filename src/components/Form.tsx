@@ -15,14 +15,12 @@ const Form = <T extends Record<string, any> = Record<string, any>>(
     onChange,
     onSubmit,
     children,
-    id,
     render,
     ...rest
   } = props;
 
   return (
     <FormProvider<T>
-      customFormId={id}
       initialValues={initialValues}
       validateOnSubmit={validateOnSubmit}
       validateOnChange={validateOnChange}
@@ -31,7 +29,7 @@ const Form = <T extends Record<string, any> = Record<string, any>>(
       onChange={onChange}
       onSubmit={onSubmit}
       render={(context) => (
-        <form id={context.formId} onSubmit={context.onSubmit} {...rest}>
+        <form {...rest} onSubmit={context.onSubmit}>
           {render ? render(context) : children}
         </form>
       )}

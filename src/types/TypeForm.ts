@@ -1,4 +1,4 @@
-import { JSXElement, LabelProps, KeyOf, RenderProp } from './Global';
+import { JSXElement, KeyOf, RenderProp } from './Global';
 import { HTMLInputProps, InputOwnProps } from './Input';
 import { FormElementProps } from './Element';
 import Form from '../components/Form';
@@ -8,7 +8,6 @@ interface TypeFormReturn<T extends Record<string, any>> {
   Input: <K extends KeyOf<T>, V = T[K]>(
     props: TypeFormInputProps<K, V> & RenderProp<HTMLInputProps>,
   ) => JSXElement;
-
   applyTypes: <C extends FormElementProps>(
     component: (props: C) => JSXElement,
   ) => <K extends KeyOf<T> = KeyOf<T>, V = T[K]>(
@@ -18,7 +17,6 @@ interface TypeFormReturn<T extends Record<string, any>> {
 
 export interface TypeFormInputProps<K extends KeyOf = string, V = any>
   extends InputOwnProps<K, V>,
-    Omit<HTMLInputProps, keyof InputOwnProps>,
-    LabelProps {}
+    Omit<HTMLInputProps, keyof InputOwnProps> {}
 
 export default TypeFormReturn;

@@ -122,7 +122,7 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
     return !hasErrors;
   }, [errors]);
 
-  const formValues: UseFormHandlerReturn<T> = {
+  return {
     data,
     isValid,
     isDirty,
@@ -138,8 +138,6 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
     validate,
     reset,
   };
-
-  return formValues;
 };
 
 export default useFormHandler;

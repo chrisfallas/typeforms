@@ -7,7 +7,6 @@ const useFormElement = <T extends Record<string, any> = Record<string, any>>(
 ): UseFormElementReturn<T> => {
   const formContext = useFormContext<T>();
 
-  const id = `${formContext.formId}-${name}`;
   const value = formContext.getValue(name);
 
   const setValue: UseFormElementReturn<T>['setValue'] = async (value) => {
@@ -15,7 +14,6 @@ const useFormElement = <T extends Record<string, any> = Record<string, any>>(
   };
 
   return {
-    id,
     value,
     setValue,
     onChange: formContext.onChange,
