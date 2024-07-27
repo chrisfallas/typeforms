@@ -3,4 +3,4 @@
 
 bunx lint-staged
 bun run build
-git add dist
+git add .

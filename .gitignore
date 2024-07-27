@@ -130,3 +130,9 @@ out
 
 # typescript
 *.tsbuildinfo
+
+# IDE
+.idea
+
+# Build
+dist
