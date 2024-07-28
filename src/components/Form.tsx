@@ -31,7 +31,7 @@ const Form = <T extends Record<string, any> = Record<string, any>>(
       onSubmit={onSubmit}
       debug={debug}
       render={(context) => (
-        <form {...rest} onSubmit={context.onSubmit}>
+        <form {...rest} onSubmit={context.onSubmit} onReset={context.reset}>
           {render ? render(context) : children}
         </form>
       )}
