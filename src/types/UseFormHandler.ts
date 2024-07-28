@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, FormEvent } from 'react';
+import { ChangeEvent, FocusEvent, FormEvent, RefObject } from 'react';
 import {
   SchemaValidationResult,
   UseSchemaValidationProps,
@@ -11,6 +11,7 @@ import { SchemaValidationStrategy } from './UseSchemaValidation';
 export interface UseFormHandlerProps<
   T extends Record<string, any> = Record<string, any>,
 > {
+  formRef?: RefObject<UseFormHandlerReturn<T>>;
   initialValues?: Partial<T>;
   validateOnSubmit?: boolean | SchemaValidationStrategy<T>;
   validateOnChange?: boolean | SchemaValidationStrategy<T>;

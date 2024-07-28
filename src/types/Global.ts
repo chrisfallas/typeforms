@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, RefObject } from 'react';
 
 export type JSXElement = ReactNode | null;
 
@@ -9,4 +9,8 @@ export type KeyOf<T extends Record<string, any> = Record<string, any>> = Extract
 
 export type RenderProp<P> = {
   render?: (props: P) => JSXElement;
+};
+
+export type RefProp<T> = {
+  domRef?: RefObject<T>;
 };

@@ -11,6 +11,7 @@ export const FormContext = createContext<FormContextValues>(null as any);
  * This is not being exported to keep the library API simple and clean.
  */
 const FormProvider = <T extends Record<string, any> = Record<string, any>>({
+  formRef,
   initialValues,
   validateOnSubmit,
   validateOnChange,
@@ -23,6 +24,7 @@ const FormProvider = <T extends Record<string, any> = Record<string, any>>({
   children,
 }: PropsWithChildren<FormProviderProps<T> & RenderProp<FormContextValues<T>>>) => {
   const formValues: FormContextValues<T> = useFormHandler<T>({
+    formRef,
     initialValues,
     validateOnSubmit,
     validateOnChange,

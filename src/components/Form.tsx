@@ -14,6 +14,8 @@ const Form = <T extends Record<string, any> = Record<string, any>>(
     schemaValidation,
     onChange,
     onSubmit,
+    domRef,
+    formRef,
     children,
     render,
     debug,
@@ -22,6 +24,7 @@ const Form = <T extends Record<string, any> = Record<string, any>>(
 
   return (
     <FormProvider<T>
+      formRef={formRef}
       initialValues={initialValues}
       validateOnSubmit={validateOnSubmit}
       validateOnChange={validateOnChange}
@@ -31,7 +34,7 @@ const Form = <T extends Record<string, any> = Record<string, any>>(
       onSubmit={onSubmit}
       debug={debug}
       render={(context) => (
-        <form {...rest} onSubmit={context.onSubmit} onReset={context.reset}>
+        <form {...rest} ref={domRef} onSubmit={context.onSubmit} onReset={context.reset}>
           {render ? render(context) : children}
         </form>
       )}

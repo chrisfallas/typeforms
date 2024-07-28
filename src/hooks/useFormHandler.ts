@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useImperativeHandle, useMemo, useState } from 'react';
 import { UseFormHandlerProps, UseFormHandlerReturn } from '../types/UseFormHandler';
 import { KeyOf } from '../types/Global';
 import useSchemaValidation from './useSchemaValidation';
@@ -8,6 +8,7 @@ import useSchemaValidation from './useSchemaValidation';
  * This is not being exported to keep the library API simple and clean.
  */
 const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
+  formRef,
   initialValues = {},
   validateOnSubmit = true,
   validateOnChange = false,
@@ -129,12 +130,9 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
     return stringifiedInitialValues !== stringifiedData;
   }, [initialValues, data]);
 
-  const isValid = useMemo(() => {
-    const hasErrors = !!Object.keys(errors).length;
-    return !hasErrors;
-  }, [errors]);
+  const isValid = useMemo(() => !Object.keys(errors).length, [errors]);
 
-  return {
+  const formHandler: UseFormHandlerReturn<T> = {
     data,
     isValid,
     isDirty,
@@ -150,6 +148,10 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
     validate,
     reset,
   };
+
+  useImperativeHandle(formRef, () => formHandler);
+
+  return formHandler;
 };
 
 export default useFormHandler;
