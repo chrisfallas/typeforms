@@ -18,6 +18,7 @@ const FormProvider = <T extends Record<string, any> = Record<string, any>>({
   schemaValidation,
   onChange,
   onSubmit,
+  debug,
   render,
   children,
 }: PropsWithChildren<FormProviderProps<T> & RenderProp<FormContextValues<T>>>) => {
@@ -29,6 +30,7 @@ const FormProvider = <T extends Record<string, any> = Record<string, any>>({
     schemaValidation,
     onChange,
     onSubmit,
+    debug,
   });
 
   return (

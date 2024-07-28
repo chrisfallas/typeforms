@@ -15,6 +15,7 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
   schemaValidation,
   onChange: onChangeCallback,
   onSubmit: onSubmitCallback,
+  debug,
 }: UseFormHandlerProps<T>): UseFormHandlerReturn<T> => {
   const [data, setData] = useState<UseFormHandlerReturn<T>['data']>(initialValues);
   const [state, setState] = useState({
@@ -27,7 +28,12 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
     useSchemaValidation<T>({ schemaValidation });
 
   const setIsSubmitting = async (isSubmitting: typeof state.isSubmitting) =>
-    setState((prev) => ({ ...prev, isSubmitting }));
+    setState((prev) => {
+      const newState = { ...prev, isSubmitting };
+      if (typeof debug === 'string') console.log(`Form (${debug}) state:`, newState);
+      else if (debug) console.log('Form state:', newState);
+      return newState;
+    });
 
   const getValue: UseFormHandlerReturn<T>['getValue'] = (name) =>
     name ? data[name] : undefined;
@@ -55,6 +61,8 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
     if (fieldsChangingCount > 0) {
       setData((prev) => {
         const allNewData = { ...prev, ...newData };
+        if (typeof debug === 'string') console.log(`Form (${debug}) data:`, allNewData);
+        else if (debug) console.log('Form data:', allNewData);
         new Promise(() => onChangeCallback?.(allNewData));
         return allNewData;
       });
@@ -106,7 +114,11 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
   };
 
   const reset: UseFormHandlerReturn<T>['reset'] = async () => {
-    setData(initialValues);
+    setData(() => {
+      if (typeof debug === 'string') console.log(`Form (${debug}) data:`, initialValues);
+      else if (debug) console.log('Form data:', initialValues);
+      return initialValues;
+    });
     resetErrors();
     new Promise(() => onChangeCallback?.(initialValues));
   };

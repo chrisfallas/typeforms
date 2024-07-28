@@ -16,6 +16,7 @@ const Form = <T extends Record<string, any> = Record<string, any>>(
     onSubmit,
     children,
     render,
+    debug,
     ...rest
   } = props;
 
@@ -28,6 +29,7 @@ const Form = <T extends Record<string, any> = Record<string, any>>(
       schemaValidation={schemaValidation}
       onChange={onChange}
       onSubmit={onSubmit}
+      debug={debug}
       render={(context) => (
         <form {...rest} onSubmit={context.onSubmit}>
           {render ? render(context) : children}

@@ -20,6 +20,7 @@ export interface UseFormHandlerProps<
   onSubmit?: (
     result: OnSubmitResultSuccess | OnSubmitResultError,
   ) => Promise<void> | void;
+  debug?: boolean | string;
 }
 
 export interface UseFormHandlerReturn<
