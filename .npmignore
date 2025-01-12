@@ -8,3 +8,5 @@ src
 .prettierrc
 bun.lockb
 tsconfig.json
+README.md
+local-package
