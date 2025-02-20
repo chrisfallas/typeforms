@@ -1,6 +1,6 @@
 import { DetailedHTMLProps, FormHTMLAttributes } from 'react';
 import { FormProviderProps } from './FormProvider';
-import { RefProp } from './Global.ts';
+import { RefProp } from './Global';
 
 export type HTMLFormProps = DetailedHTMLProps<
   FormHTMLAttributes<HTMLFormElement>,

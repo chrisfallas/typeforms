@@ -1,6 +1,6 @@
+import { useContext } from 'react';
 import { FormContext } from '../providers/FormProvider';
 import { FormContextValues } from '../types/FormProvider';
-import { useContext } from 'react';
 
 const useFormContext = <T extends Record<string, any> = Record<string, any>>() => {
   const context = useContext(FormContext);

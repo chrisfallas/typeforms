@@ -35,7 +35,7 @@ const useSchemaValidation = <T extends Record<string, any> = Record<string, any>
       if (include && !include.includes(field as KeyOf<T>)) needsValidation = false;
       if (exclude && exclude.includes(field as KeyOf<T>)) needsValidation = false;
       if (!needsValidation) continue;
-      errorsFound[field as KeyOf<T>] = result[field];
+      errorsFound[field as KeyOf<T>] = result[field as KeyOf<typeof result>];
     }
     return errorsFound;
   };
@@ -52,7 +52,8 @@ const useSchemaValidation = <T extends Record<string, any> = Record<string, any>
       if (include && !include.includes(field as KeyOf<T>)) needsValidation = false;
       if (exclude && exclude.includes(field as KeyOf<T>)) needsValidation = false;
       if (!needsValidation) continue;
-      const validationFunction = schemaValidationObject[field];
+      const validationFunction =
+        schemaValidationObject[field as KeyOf<typeof schemaValidationObject>];
       const value = data[field] as T[KeyOf<T>] | undefined;
       const result = await validationFunction?.(value);
       errorsFound[field as KeyOf<T>] = result;
@@ -78,7 +79,7 @@ const useSchemaValidation = <T extends Record<string, any> = Record<string, any>
     }
     const errorsWithoutUndefines: typeof errors = {};
     for (const field in errorsFound) {
-      const error = errorsFound[field];
+      const error = errorsFound[field as KeyOf<typeof errorsFound>];
       if (error?.length) errorsWithoutUndefines[field as KeyOf<T>] = error;
     }
     return errorsWithoutUndefines;

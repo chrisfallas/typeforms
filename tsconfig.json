@@ -6,9 +6,9 @@
     "target": "esnext",
     "moduleResolution": "bundler",
     "moduleDetection": "force",
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": false,
     "emitDeclarationOnly": true,
-    "composite": true,
+    "declaration": true,
     "strict": true,
     "downlevelIteration": true,
     "skipLibCheck": true,
@@ -17,7 +17,7 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
     "esModuleInterop": true,
-    "outDir": "dist",
+    "outDir": "dist"
   },
-  "include": ["src"],
+  "include": ["src"]
 }

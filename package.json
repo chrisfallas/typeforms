@@ -34,9 +34,10 @@
     "react-dom": ">=17.0.0"
   },
   "devDependencies": {
-    "@types/bun": "^1.1.16",
+    "@types/node": "^22.13.4",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "esbuild": "^0.25.0",
     "husky": "^8.0.3",
     "lint-staged": "^15.1.0",
     "prettier": "^3.0.3",
@@ -44,12 +45,8 @@
   },
   "scripts": {
     "postinstall": "node -e \"try {require('husky').install('./.husky');} catch (e) {}\"",
-    "build": "bun build:lib && bun run build:types",
-    "build:lib": "bun build ./src/index.ts --outdir ./dist --target=node --external react --minify",
-    "build:types": "tsc --project tsconfig.json",
-    "dev": "bun bun.local.ts",
-    "dev:lib": "bun build ./src/index.ts --outdir ./dist --target=node --external react --minify --watch",
-    "dev:types": "tsc --project tsconfig.json --watch",
+    "build": "BUILD_TYPE=PROD node esbuild.mjs",
+    "dev": "BUILD_TYPE=DEV node esbuild.mjs",
     "prettier": "prettier --write \"src/**/*.+(ts|tsx|js|jsx|json|css|scss|saas|html|md)\""
   }
 }
