@@ -1,40 +1,16 @@
-import { PropsWithChildren, createContext } from 'react';
+import { createContext, PropsWithChildren } from 'react';
 import useFormHandler from '../hooks/useFormHandler';
 import { FormContextValues } from '../types/FormProvider';
 import { FormProviderProps } from '../types/FormProvider';
-import { RenderProp } from '../types/Global';
 
-export const FormContext = createContext<FormContextValues>(null as any);
+export const FormContext = createContext<FormContextValues>({} as FormContextValues);
 
-/**
- * Internal context provider to pass down to form elements the form state and handlers.
- * This is not being exported to keep the library API simple and clean.
- */
 const FormProvider = <T extends Record<string, any> = Record<string, any>>({
-  formRef,
-  initialValues,
-  validateOnSubmit,
-  validateOnChange,
-  validateOnBlur,
-  schemaValidation,
-  onChange,
-  onSubmit,
-  debug,
   render,
   children,
-}: PropsWithChildren<FormProviderProps<T> & RenderProp<FormContextValues<T>>>) => {
-  const formValues: FormContextValues<T> = useFormHandler<T>({
-    formRef,
-    initialValues,
-    validateOnSubmit,
-    validateOnChange,
-    validateOnBlur,
-    schemaValidation,
-    onChange,
-    onSubmit,
-    debug,
-  });
-
+  ...rest
+}: PropsWithChildren<FormProviderProps<T>>) => {
+  const formValues: FormContextValues<T> = useFormHandler<T>(rest);
   return (
     <FormContext.Provider value={formValues as FormContextValues}>
       {render ? render(formValues) : children}

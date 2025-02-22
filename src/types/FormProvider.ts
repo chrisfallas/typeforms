@@ -1,7 +1,10 @@
-import { UseFormHandlerProps, UseFormHandlerReturn } from './UseFormHandler';
+import { FormHandlerProps, FormHandlerReturn } from './FormHandler';
+import { RenderProp } from './Global';
 
 export interface FormProviderProps<T extends Record<string, any> = Record<string, any>>
-  extends UseFormHandlerProps<T> {}
+  extends FormHandlerProps<T> {
+  render?: RenderProp<FormContextValues<T>>;
+}
 
 export interface FormContextValues<T extends Record<string, any> = Record<string, any>>
-  extends UseFormHandlerReturn<T> {}
+  extends FormHandlerReturn<T> {}

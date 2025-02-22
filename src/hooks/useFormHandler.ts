@@ -1,127 +1,56 @@
 import { useImperativeHandle, useMemo, useState } from 'react';
-import { UseFormHandlerProps, UseFormHandlerReturn } from '../types/UseFormHandler';
-import { KeyOf } from '../types/Global';
-import useSchemaValidation from './useSchemaValidation';
+import { FormHandlerProps, FormHandlerReturn } from '../types/FormHandler';
 
-/**
- * Internal hook to handle form state.
- * This is not being exported to keep the library API simple and clean.
- */
 const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
   formRef,
   initialValues = {},
-  validateOnSubmit = true,
-  validateOnChange = false,
-  validateOnBlur = false,
-  schemaValidation,
   onChange: onChangeCallback,
   onSubmit: onSubmitCallback,
+  onReset: onResetCallback,
   debug,
-}: UseFormHandlerProps<T>): UseFormHandlerReturn<T> => {
-  const [data, setData] = useState<UseFormHandlerReturn<T>['data']>(initialValues);
-  const [state, setState] = useState({
-    isSubmitting: false,
-  });
+}: FormHandlerProps<T>): FormHandlerReturn<T> => {
+  const [data, _setData] = useState<FormHandlerReturn<T>['data']>(initialValues);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { isSubmitting } = state;
+  const setData = (newData: typeof data, options?: { override?: boolean }) => {
+    const allNewData = options?.override ? newData : { ...data, ...newData };
+    if (typeof debug === 'string') console.log(`Form (${debug}) data:`, allNewData);
+    else if (debug) console.log('Form data:', allNewData);
+    new Promise(() => onChangeCallback?.(allNewData)).catch(() => {});
+    _setData(allNewData);
+  };
 
-  const { errors, getErrors, validate, checkValidationStrategy, resetErrors } =
-    useSchemaValidation<T>({ schemaValidation });
-
-  const setIsSubmitting = async (isSubmitting: typeof state.isSubmitting) =>
-    setState((prev) => {
-      const newState = { ...prev, isSubmitting };
-      if (typeof debug === 'string') console.log(`Form (${debug}) state:`, newState);
-      else if (debug) console.log('Form state:', newState);
-      return newState;
-    });
-
-  const getValue: UseFormHandlerReturn<T>['getValue'] = (name) =>
+  const getValue: FormHandlerReturn<T>['getValue'] = (name) =>
     name ? data[name] : undefined;
 
-  const setValues: UseFormHandlerReturn<T>['setValues'] = async (values) => {
-    const { isValidationRequired, include, exclude } =
-      checkValidationStrategy(validateOnChange);
+  const setValues: FormHandlerReturn<T>['setValues'] = async (values) => {
     const newData: typeof data = {};
     let fieldsChangingCount = 0;
-    const fieldsThatNeedValidation: Array<KeyOf<T>> = [];
     for (const { name, value } of values) {
       if (!name) continue;
       if (['', undefined, null].includes(value)) newData[name] = undefined;
       else newData[name] = value;
       if (newData[name] !== getValue(name)) fieldsChangingCount++;
-      let needsValidation = isValidationRequired;
-      if (include && !include.includes(name)) needsValidation = false;
-      if (exclude && exclude.includes(name)) needsValidation = false;
-      if (!needsValidation) continue;
-      fieldsThatNeedValidation.push(name);
     }
-    if (fieldsThatNeedValidation.length) {
-      validate({ data: newData, include: fieldsThatNeedValidation });
-    }
-    if (fieldsChangingCount > 0) {
-      setData((prev) => {
-        const allNewData = { ...prev, ...newData };
-        if (typeof debug === 'string') console.log(`Form (${debug}) data:`, allNewData);
-        else if (debug) console.log('Form data:', allNewData);
-        new Promise(() => onChangeCallback?.(allNewData));
-        return allNewData;
-      });
-    }
+    if (fieldsChangingCount > 0) setData(newData);
   };
 
-  const setValue: UseFormHandlerReturn<T>['setValue'] = async (name, value) => {
-    if (!name || value === getValue(name)) return;
+  const setValue: FormHandlerReturn<T>['setValue'] = async (name, value) =>
     setValues([{ name, value }]);
-  };
 
-  const onChange: UseFormHandlerReturn<T>['onChange'] = async (event) => {
-    const name = event.target.name as KeyOf<T> | undefined;
-    if (!name) return;
-    let value: any = event.target.value;
-    if (value && event.target.type === 'number') value = Number(value);
-    setValue(name, value);
-  };
-
-  const onBlur: UseFormHandlerReturn<T>['onBlur'] = async (event) => {
-    const name = event.target.name as KeyOf<T> | undefined;
-    if (!name) return;
-    const { isValidationRequired, include, exclude } =
-      checkValidationStrategy(validateOnBlur);
-    let needsValidation = isValidationRequired;
-    if (include && !include.includes(name)) needsValidation = false;
-    if (exclude && exclude.includes(name)) needsValidation = false;
-    if (!needsValidation) return;
-    validate({ data, include: [name] });
-  };
-
-  const onSubmit: UseFormHandlerReturn<T>['onSubmit'] = async (event) => {
-    event.preventDefault();
+  const submit: FormHandlerReturn<T>['submit'] = async (event) => {
+    event?.preventDefault();
     setIsSubmitting(true);
     try {
-      const { isValidationRequired, include, exclude } =
-        checkValidationStrategy(validateOnSubmit);
-      if (!isValidationRequired) {
-        await onSubmitCallback?.({ ok: true, data: data as T });
-      } else {
-        const errorsFound = await validate({ data, include, exclude });
-        const hasErrors = !!Object.keys(errorsFound).length;
-        if (!hasErrors) await onSubmitCallback?.({ ok: true, data: data as T });
-        else await onSubmitCallback?.({ ok: false, errors: errorsFound });
-      }
+      await onSubmitCallback?.({ ok: true, data: data as T });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const reset: UseFormHandlerReturn<T>['reset'] = async () => {
-    setData(() => {
-      if (typeof debug === 'string') console.log(`Form (${debug}) data:`, initialValues);
-      else if (debug) console.log('Form data:', initialValues);
-      return initialValues;
-    });
-    resetErrors();
-    new Promise(() => onChangeCallback?.(initialValues));
+  const reset: FormHandlerReturn<T>['reset'] = async () => {
+    setData(initialValues, { override: true });
+    onResetCallback?.();
   };
 
   const isDirty = useMemo(() => {
@@ -130,24 +59,23 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
     return stringifiedInitialValues !== stringifiedData;
   }, [initialValues, data]);
 
-  const isValid = useMemo(() => !Object.keys(errors).length, [errors]);
+  const isValid = true;
+  // const isValid = useMemo(() => !Object.keys(errors).length, [errors]);
 
-  const formHandler: UseFormHandlerReturn<T> = {
-    data,
-    isValid,
-    isDirty,
-    isSubmitting,
-    errors,
-    getValue,
-    setValue,
-    setValues,
-    getErrors,
-    onChange,
-    onBlur,
-    onSubmit,
-    validate,
-    reset,
-  };
+  const formHandler: FormHandlerReturn<T> = useMemo(
+    () => ({
+      data,
+      isValid,
+      isDirty,
+      isSubmitting,
+      getValue,
+      setValue,
+      setValues,
+      submit,
+      reset,
+    }),
+    [data, isValid, isDirty, isSubmitting, getValue, setValue, setValues, submit, reset],
+  );
 
   useImperativeHandle(formRef, () => formHandler);
 
