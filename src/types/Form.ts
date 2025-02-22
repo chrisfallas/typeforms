@@ -26,5 +26,3 @@ export type FormComponent<T extends Record<string, any> = Record<string, any>> =
 >(
   props: PropsWithChildren<FormProps<P>>,
 ) => Child;
-
-export type FormElement = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;

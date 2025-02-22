@@ -62,20 +62,17 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
   const isValid = true;
   // const isValid = useMemo(() => !Object.keys(errors).length, [errors]);
 
-  const formHandler: FormHandlerReturn<T> = useMemo(
-    () => ({
-      data,
-      isValid,
-      isDirty,
-      isSubmitting,
-      getValue,
-      setValue,
-      setValues,
-      submit,
-      reset,
-    }),
-    [data, isValid, isDirty, isSubmitting, getValue, setValue, setValues, submit, reset],
-  );
+  const formHandler: FormHandlerReturn<T> = {
+    data,
+    isValid,
+    isDirty,
+    isSubmitting,
+    getValue,
+    setValue,
+    setValues,
+    submit,
+    reset,
+  };
 
   useImperativeHandle(formRef, () => formHandler);
 

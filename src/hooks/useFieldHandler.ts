@@ -1,7 +1,7 @@
 import { KeyOf } from '../types/Global';
 import { FieldHandlerProps, FieldHandlerReturn } from '../types/FieldHandler';
 import useFormContext from './useFormContext';
-import { useImperativeHandle, useMemo } from 'react';
+import { useImperativeHandle } from 'react';
 
 const useFieldHandler = <K extends KeyOf = KeyOf, V = any>({
   fieldRef,
@@ -17,20 +17,11 @@ const useFieldHandler = <K extends KeyOf = KeyOf, V = any>({
     setValue(name, value);
   };
 
-  const onChangeHandler: FieldHandlerReturn<K, V>['onChangeHandler'] = (event) => {
-    if (!event?.target) return;
-    handleSetValue(event.target.value);
+  const contextValues: FieldHandlerReturn<K, V> = {
+    name,
+    value,
+    setValue: handleSetValue,
   };
-
-  const contextValues: FieldHandlerReturn<K, V> = useMemo(
-    () => ({
-      name,
-      value,
-      setValue: handleSetValue,
-      onChangeHandler,
-    }),
-    [name, value],
-  );
 
   useImperativeHandle(fieldRef, () => contextValues);
 
