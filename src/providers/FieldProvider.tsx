@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren } from 'react';
+import { createContext, useContext, PropsWithChildren } from 'react';
 import useFieldHandler from '../hooks/useFieldHandler';
 import { FieldContextValues, FieldProviderProps } from '../types/FieldProvider';
 import { KeyOf } from '../types/Global';
@@ -16,6 +16,15 @@ const FieldProvider = <K extends KeyOf = KeyOf, V = any>({
       {component ? component(contextValues) : children}
     </FieldContext.Provider>
   );
+};
+
+export const useFieldContext = <K extends KeyOf = KeyOf, V = any>() => {
+  const context = useContext(FieldContext);
+
+  if (!context)
+    throw new Error('useFieldContext must be used from a Field child component');
+
+  return context as FieldContextValues<K, V>;
 };
 
 export default FieldProvider;

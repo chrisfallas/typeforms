@@ -6,6 +6,7 @@ import {
 } from 'react';
 import { FormProviderProps } from './FormProvider';
 import { Child } from './Global';
+import { ValidationsProviderProps } from './ValidationsProvider';
 
 export type HTMLFormProps = DetailedHTMLProps<
   FormHTMLAttributes<HTMLFormElement>,
@@ -13,7 +14,8 @@ export type HTMLFormProps = DetailedHTMLProps<
 >;
 
 export interface FormOwnProps<T extends Record<string, any> = Record<string, any>>
-  extends FormProviderProps<T> {
+  extends FormProviderProps<T>,
+    ValidationsProviderProps<T> {
   domRef?: RefObject<HTMLFormElement>;
 }
 

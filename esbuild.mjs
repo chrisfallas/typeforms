@@ -12,7 +12,7 @@ const outdir = isProd ? 'dist' : 'local-package/dist';
 const buildOptions = {
   entryPoints: ['src/index.ts'],
   bundle: true,
-  minify: true,
+  minify: isProd,
   sourcemap: false,
   platform: 'node',
   format: 'esm',
