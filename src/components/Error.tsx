@@ -1,10 +1,20 @@
 import { useFieldErrors } from '../hooks/useValidationErrors';
-import { ErrorComponent } from '../types/Error';
+import { ErrorComponent, ErrorProps } from '../types/Error';
+import { KeyOf } from '../types/Global';
 
-const Error: ErrorComponent = ({ domRef, htmlFor, index, alwaysVisible, ...rest }) => {
-  const { isValid, errors } = useFieldErrors(htmlFor);
+const Error: ErrorComponent = <K extends KeyOf = KeyOf>({
+  domRef,
+  htmlFor,
+  index = 0,
+  alwaysVisible,
+  render,
+  ...rest
+}: ErrorProps<K>) => {
+  const fieldErrors = useFieldErrors(htmlFor);
 
-  const error = errors[index ?? 0];
+  const { isValid, errors } = fieldErrors;
+
+  const error = errors[index];
 
   if (!error && !alwaysVisible) return null;
 
@@ -15,7 +25,7 @@ const Error: ErrorComponent = ({ domRef, htmlFor, index, alwaysVisible, ...rest 
       style={{ visibility: isValid ? 'hidden' : 'visible' }}
       {...rest}
     >
-      {error || <>&nbsp;</>}
+      {render ? render(fieldErrors) : error || <>&nbsp;</>}
     </span>
   );
 };

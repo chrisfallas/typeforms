@@ -74,7 +74,7 @@ const useValidationsHandler = <T extends Record<string, any> = Record<string, an
     };
 
   const validate: ValidationsHandlerReturn<T>['validate'] = async (options = {}) => {
-    const { keys, shouldUpdateState = true, event = 'manual' } = options;
+    const { keys, skipStateUpdate = false, event = 'manual' } = options;
 
     const returnValue: State = {};
 
@@ -115,7 +115,7 @@ const useValidationsHandler = <T extends Record<string, any> = Record<string, an
       }
     }
 
-    if (shouldUpdateState) updateValidationResultMap(returnValue);
+    if (!skipStateUpdate) updateValidationResultMap(returnValue);
 
     return returnValue;
   };

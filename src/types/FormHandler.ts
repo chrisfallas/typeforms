@@ -20,10 +20,18 @@ export interface FormHandlerReturn<T extends Record<string, any> = Record<string
   isDirty: boolean;
   isSubmitting: boolean;
   getValue: <K extends KeyOf<T>>(name: K) => T[K] | undefined;
-  setValue: <K extends KeyOf<T>>(name: K, value: T[K]) => Promise<void>;
-  setValues: <K extends KeyOf<T>>(
-    values: Array<{ name: K; value: T[K]; validate?: boolean }>,
+  setValue: <K extends KeyOf<T>>(
+    name: K,
+    value: T[K],
+    options?: { skipValidation?: boolean },
   ) => Promise<void>;
+  setValues: <K extends KeyOf<T>>(
+    values: Array<{ name: K; value: T[K]; skipValidation?: boolean }>,
+  ) => Promise<void>;
+  validate: <K extends KeyOf<T> = KeyOf<T>>(options?: {
+    keys?: Array<K>;
+    skipStateUpdate?: boolean;
+  }) => Promise<FormErrors<T>>;
   submit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
   reset: () => Promise<void>;
 }

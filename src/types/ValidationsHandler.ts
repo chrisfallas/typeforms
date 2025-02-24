@@ -22,7 +22,7 @@ export interface ValidationsHandlerReturn<
   ) => () => void;
   validate: (options?: {
     keys?: Array<KeyOf<T>>;
-    shouldUpdateState?: boolean;
+    skipStateUpdate?: boolean;
     event?: FieldValidationEvent;
   }) => Promise<Partial<Record<KeyOf<T>, ValidationResult>>>;
 }
