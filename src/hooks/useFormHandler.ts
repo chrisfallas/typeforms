@@ -1,23 +1,25 @@
 import { useImperativeHandle, useMemo, useState } from 'react';
-import { useValidationsContext } from '../providers/ValidationsProvider';
-import { useFormErrors } from './useValidationErrors';
-import { FormHandlerProps, FormHandlerReturn } from '../types/FormHandler';
-import { KeyOf } from '../types/Global';
 import useOnMountEffect from './useOnMountEffect';
 import { readFormValidationResult } from '../utils/validations';
+import { KeyOf } from '../types/Global';
+import { FormHandlerProps, FormHandlerReturn } from '../types/FormHandler';
+import { ValidationsHandlerReturn } from '../types/ValidationsHandler';
 
-const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
-  formRef,
-  initialValues = {},
-  onChange: onChangeCallback,
-  onSubmit: onSubmitCallback,
-  onReset: onResetCallback,
-  debug,
-}: FormHandlerProps<T>): FormHandlerReturn<T> => {
+const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
+  validationsContext: ValidationsHandlerReturn<T>,
+  {
+    formRef,
+    initialValues = {},
+    onChange: onChangeCallback,
+    onSubmit: onSubmitCallback,
+    onReset: onResetCallback,
+    debug,
+  }: FormHandlerProps<T>,
+): FormHandlerReturn<T> => {
   const [data, _setData] = useState<FormHandlerReturn<T>['data']>(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { dataRef, validate } = useValidationsContext<T>();
+  const { dataRef, validationResultMap, validate } = validationsContext;
 
   dataRef.current = data;
 
@@ -27,7 +29,10 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>({
     return stringifiedInitialValues !== stringifiedData;
   }, [initialValues, data]);
 
-  const { isValid, errors } = useFormErrors<T>();
+  const { isValid, errors } = useMemo(
+    () => readFormValidationResult(validationResultMap),
+    [validationResultMap],
+  );
 
   const validateOnChange = async (newData: typeof data) => {
     const keys: Array<KeyOf<T>> = [];

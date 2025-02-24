@@ -1,15 +1,15 @@
 import { useMemo } from 'react';
-import { useValidationsContext } from '../providers/ValidationsProvider';
+import { useValidationsContext } from '../contexts/ValidationsContext';
 import {
   readFieldValidationResult,
   readFormValidationResult,
 } from '../utils/validations';
 import { KeyOf } from '../types/Global';
-import { FieldErrorsReturn, FormErrorsReturn } from '../types/ValidationErrors';
+import { FieldErrors, FormErrors } from '../types/ValidationErrors';
 
 export const useFormErrors = <
   T extends Record<string, any> = Record<string, any>,
->(): FormErrorsReturn<T> => {
+>(): FormErrors<T> => {
   const { validationResultMap } = useValidationsContext();
   return useMemo(
     () => readFormValidationResult(validationResultMap),
@@ -19,7 +19,7 @@ export const useFormErrors = <
 
 export const useFieldErrors = <T extends Record<string, any> = Record<string, any>>(
   key: KeyOf<T>,
-): FieldErrorsReturn => {
+): FieldErrors => {
   const { validationResultMap } = useValidationsContext();
   return useMemo(
     () => readFieldValidationResult(validationResultMap[key]),

@@ -1,29 +1,27 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import { InputComponent } from '../types/Input';
-import { FieldContextValues } from '../types/FieldProvider';
 import useFieldHandler from '../hooks/useFieldHandler';
+import { KeyOf } from '../types/Global';
+import { InputComponent, InputProps } from '../types/Input';
 
-const Input: InputComponent = (props) => {
-  const {
-    domRef,
-    fieldRef,
-    name,
-    onChange,
-    onBlur,
-    validation,
-    validateOnMount,
-    validateOnSubmit,
-    validateOnChange,
-    validateOnBlur,
-    ...rest
-  } = props;
-
+const Input: InputComponent = <K extends KeyOf = KeyOf, V = any>({
+  domRef,
+  fieldRef,
+  name,
+  onChange,
+  onBlur,
+  validation,
+  validateOnMount,
+  validateOnSubmit,
+  validateOnChange,
+  validateOnBlur,
+  ...rest
+}: InputProps<K, V>) => {
   const {
     value = '',
     isValid,
     setValue,
     blur,
-  }: FieldContextValues = useFieldHandler({
+  } = useFieldHandler<K, V>({
     fieldRef,
     name,
     onChange,
@@ -36,7 +34,7 @@ const Input: InputComponent = (props) => {
 
   const onChangeHandler = ({ target }: ChangeEvent<HTMLInputElement>) => {
     const value = target.type === 'number' ? +target.value : target.value;
-    setValue(value);
+    setValue(value as V);
   };
 
   const onBlurHandler = (event: FocusEvent<HTMLInputElement>) => {
@@ -48,7 +46,7 @@ const Input: InputComponent = (props) => {
     <input
       ref={domRef}
       name={name}
-      value={value}
+      value={String(value)}
       onChange={onChangeHandler}
       onBlur={onBlurHandler}
       aria-invalid={!isValid}

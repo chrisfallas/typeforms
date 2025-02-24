@@ -1,8 +1,10 @@
-import FormProvider from '../providers/FormProvider';
-import ValidationsProvider from '../providers/ValidationsProvider';
-import { FormComponent } from '../types/Form';
+import FormContext from '../contexts/FormContext';
+import ValidationsContext from '../contexts/ValidationsContext';
+import useFormHandler from '../hooks/useFormHandler';
+import useValidationsHandler from '../hooks/useValidationsHandler';
+import { FormComponent, FormProps } from '../types/Form';
 
-const Form: FormComponent = ({
+const Form: FormComponent = <T extends Record<number, any> = Record<number, any>>({
   initialValues,
   onChange,
   onSubmit,
@@ -18,28 +20,34 @@ const Form: FormComponent = ({
   render,
   children,
   ...rest
-}) => (
-  <ValidationsProvider
-    validations={validations}
-    validateOnMount={validateOnMount}
-    validateOnSubmit={validateOnSubmit}
-    validateOnChange={validateOnChange}
-    validateOnBlur={validateOnBlur}
-  >
-    <FormProvider
-      formRef={formRef}
-      initialValues={initialValues}
-      onChange={onChange}
-      onSubmit={onSubmit}
-      onReset={onReset}
-      debug={debug}
-      render={(context) => (
-        <form {...rest} ref={domRef} onSubmit={context.submit} onReset={context.reset}>
-          {render ? render(context) : children}
+}: FormProps<T>) => {
+  const validationsContext = useValidationsHandler<T>({
+    validations,
+    validateOnMount,
+    validateOnSubmit,
+    validateOnChange,
+    validateOnBlur,
+  });
+
+  const formContext = useFormHandler<T>(validationsContext, {
+    initialValues,
+    onChange,
+    onSubmit,
+    onReset,
+    debug,
+  });
+
+  const { submit, reset } = formContext;
+
+  return (
+    <ValidationsContext.Provider value={validationsContext}>
+      <FormContext.Provider value={formContext}>
+        <form ref={domRef} onSubmit={submit} onReset={reset} {...rest}>
+          {render ? render(formContext) : children}
         </form>
-      )}
-    />
-  </ValidationsProvider>
-);
+      </FormContext.Provider>
+    </ValidationsContext.Provider>
+  );
+};
 
 export default Form;

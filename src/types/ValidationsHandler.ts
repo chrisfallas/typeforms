@@ -1,5 +1,5 @@
-import { KeyOf } from './Global';
 import { MutableRefObject } from 'react';
+import { KeyOf } from './Global';
 
 export interface ValidationsHandlerProps<
   T extends Record<string, any> = Record<string, any>,

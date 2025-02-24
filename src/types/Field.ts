@@ -1,9 +1,12 @@
-import { FieldContextValues, FieldProviderProps } from './FieldProvider';
-import { Child, KeyOf } from './Global';
 import { PropsWithChildren } from 'react';
+import { Child, KeyOf, RenderProp } from './Global';
+import { FieldHandlerProps, FieldHandlerReturn } from './FieldHandler';
 
 export interface FieldProps<K extends KeyOf = KeyOf, V = any>
-  extends FieldProviderProps<K, V> {}
+  extends FieldHandlerProps<K, V>,
+    PropsWithChildren<{}> {
+  component?: RenderProp<FieldHandlerReturn<K, V>>;
+}
 
 export type FieldComponent<T extends Record<string, any> = Record<string, any>> = <
   K extends KeyOf<T>,
@@ -12,7 +15,7 @@ export type FieldComponent<T extends Record<string, any> = Record<string, any>> 
   props: PropsWithChildren<FieldProps<K, V>>,
 ) => Child;
 
-export type FieldComponentProps<K extends KeyOf = KeyOf, V = any> = FieldContextValues<
+export type FieldComponentProps<K extends KeyOf = KeyOf, V = any> = FieldHandlerReturn<
   K,
   V
 >;

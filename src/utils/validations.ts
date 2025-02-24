@@ -1,11 +1,11 @@
-import { ValidationResult, ValidationsHandlerReturn } from '../types/ValidationsHandler';
-import { FieldErrorsReturn, FormErrorsReturn } from '../types/ValidationErrors';
 import { KeyOf } from '../types/Global';
+import { ValidationResult, ValidationsHandlerReturn } from '../types/ValidationsHandler';
+import { FieldErrors, FormErrors } from '../types/ValidationErrors';
 
 export const readFormValidationResult = <T extends Record<string, any>>(
   validationResultMap: ValidationsHandlerReturn<T>['validationResultMap'],
-): FormErrorsReturn<T> => {
-  const value: FormErrorsReturn<T> = { isValid: true, errors: {} };
+): FormErrors<T> => {
+  const value: FormErrors<T> = { isValid: true, errors: {} };
 
   for (const key in validationResultMap) {
     const validationResult = validationResultMap[key];
@@ -20,8 +20,8 @@ export const readFormValidationResult = <T extends Record<string, any>>(
 
 export const readFieldValidationResult = (
   validationResult?: ValidationResult,
-): FieldErrorsReturn => {
-  const value: FieldErrorsReturn = { isValid: true, errors: [] };
+): FieldErrors => {
+  const value: FieldErrors = { isValid: true, errors: [] };
 
   if (typeof validationResult === 'string') {
     if (validationResult === '') return value;

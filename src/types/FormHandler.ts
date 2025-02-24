@@ -1,13 +1,13 @@
 import { FormEvent, RefObject } from 'react';
 import { KeyOf } from './Global';
-import { FormErrorsReturn } from './ValidationErrors';
+import { FormErrors } from './ValidationErrors';
 
 export interface FormHandlerProps<T extends Record<string, any> = Record<string, any>> {
   formRef?: RefObject<FormHandlerReturn<T>>;
   initialValues?: Partial<T>;
   onChange?: (data: Partial<T>) => Promise<void> | void;
   onSubmit?: (
-    result: OnSubmitResultSuccess | OnSubmitResultError,
+    result: OnSubmitResultSuccess<T> | OnSubmitResultError<T>,
   ) => Promise<void> | void;
   onReset?: () => Promise<void> | void;
   debug?: boolean | string;
@@ -15,8 +15,8 @@ export interface FormHandlerProps<T extends Record<string, any> = Record<string,
 
 export interface FormHandlerReturn<T extends Record<string, any> = Record<string, any>> {
   data: Partial<T>;
-  errors: FormErrorsReturn<T>['errors'];
-  isValid: FormErrorsReturn<T>['isValid'];
+  errors: FormErrors<T>['errors'];
+  isValid: FormErrors<T>['isValid'];
   isDirty: boolean;
   isSubmitting: boolean;
   getValue: <K extends KeyOf<T>>(name: K) => T[K] | undefined;
@@ -35,5 +35,5 @@ type OnSubmitResultSuccess<T extends Record<string, any> = Record<string, any>> 
 
 type OnSubmitResultError<T extends Record<string, any> = Record<string, any>> = {
   ok: false;
-  errors: FormErrorsReturn<T>['errors'];
+  errors: FormErrors<T>['errors'];
 };

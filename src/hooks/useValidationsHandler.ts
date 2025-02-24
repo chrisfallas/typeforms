@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { readFieldValidationResult } from '../utils/validations';
 import { KeyOf } from '../types/Global';
 import {
   FieldValidationCallback,
@@ -7,7 +8,6 @@ import {
   ValidationsHandlerReturn,
   FieldValidationData,
 } from '../types/ValidationsHandler';
-import { readFieldValidationResult } from '../utils/validations';
 
 const useValidationsHandler = <T extends Record<string, any> = Record<string, any>>({
   validations = {},
