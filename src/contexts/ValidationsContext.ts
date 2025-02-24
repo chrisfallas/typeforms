@@ -1,7 +1,10 @@
 import { createContext, useContext } from 'react';
 import { ValidationsHandlerReturn } from '../types/ValidationsHandler';
 
-const ValidationsContext = createContext({} as ValidationsHandlerReturn);
+export type ValidationsContext<T extends Record<string, any> = Record<string, any>> =
+  ValidationsHandlerReturn<T>;
+
+const ValidationsContext = createContext({} as ValidationsContext);
 
 export const useValidationsContext = <
   T extends Record<string, any> = Record<string, any>,
@@ -12,7 +15,7 @@ export const useValidationsContext = <
     throw new Error('useFieldContext must be used from a Field child component');
   }
 
-  return context as ValidationsHandlerReturn<T>;
+  return context as ValidationsContext<T>;
 };
 
 export default ValidationsContext;

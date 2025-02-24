@@ -4,7 +4,7 @@ import { KeyOf } from './Global';
 export interface ValidationsHandlerProps<
   T extends Record<string, any> = Record<string, any>,
 > {
-  validations?: FieldValidationMap<T>;
+  validations?: FormValidationCallback<T> | FieldValidationMap<T>;
   validateOnMount?: boolean;
   validateOnSubmit?: boolean;
   validateOnChange?: boolean;
@@ -34,6 +34,9 @@ export type FieldValidationData<V = any> = {
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
 };
+
+export type FormValidationCallback<T extends Record<string, any> = Record<string, any>> =
+  (data: Partial<T>) => FieldValidationMap<T>;
 
 export type FieldValidationMap<
   T extends Record<string, any> = Record<string, any>,

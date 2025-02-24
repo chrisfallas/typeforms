@@ -5,12 +5,12 @@ import useValidationsHandler from '../hooks/useValidationsHandler';
 import { FormComponent, FormProps } from '../types/Form';
 
 const Form: FormComponent = <T extends Record<number, any> = Record<number, any>>({
+  domRef,
+  formRef,
   initialValues,
   onChange,
   onSubmit,
   onReset,
-  domRef,
-  formRef,
   debug,
   validations,
   validateOnMount,
@@ -30,6 +30,7 @@ const Form: FormComponent = <T extends Record<number, any> = Record<number, any>
   });
 
   const formContext = useFormHandler<T>(validationsContext, {
+    formRef,
     initialValues,
     onChange,
     onSubmit,

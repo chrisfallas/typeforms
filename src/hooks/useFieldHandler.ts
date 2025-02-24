@@ -25,8 +25,8 @@ const useFieldHandler = <K extends KeyOf = KeyOf, V = any>({
   const { isValid, errors } = useFieldErrors(name);
 
   const handleSetValue: FieldHandlerReturn<K, V>['setValue'] = async (value, options) => {
+    await setValue(name, value, { skipValidation: options?.skipValidation });
     onChange?.(value);
-    setValue(name, value, { skipValidation: options?.skipValidation });
   };
 
   const validate: FieldHandlerReturn<K, V>['validate'] = async () => {

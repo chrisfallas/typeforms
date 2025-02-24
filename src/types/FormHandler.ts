@@ -1,15 +1,16 @@
 import { FormEvent, RefObject } from 'react';
 import { KeyOf } from './Global';
 import { FormErrors } from './ValidationErrors';
+import { FormContext } from '../contexts/FormContext';
 
 export interface FormHandlerProps<T extends Record<string, any> = Record<string, any>> {
-  formRef?: RefObject<FormHandlerReturn<T>>;
+  formRef?: RefObject<FormContext<T>>;
   initialValues?: Partial<T>;
-  onChange?: (data: Partial<T>) => Promise<void> | void;
+  onChange?: (data: Partial<T>) => Promise<any> | any;
   onSubmit?: (
     result: OnSubmitResultSuccess<T> | OnSubmitResultError<T>,
-  ) => Promise<void> | void;
-  onReset?: () => Promise<void> | void;
+  ) => Promise<any> | any;
+  onReset?: () => Promise<any> | any;
   debug?: boolean | string;
 }
 

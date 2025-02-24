@@ -54,7 +54,9 @@ const useValidationsHandler = <T extends Record<string, any> = Record<string, an
       validateOnChange = globalValidateOnChange,
       validateOnBlur = globalValidateOnBlur,
     } = fieldValidationDataMapRef.current[key] ?? {};
-    const globalValidation = validations[key];
+    const fieldValidationMap =
+      typeof validations === 'function' ? validations(dataRef.current) : validations;
+    const globalValidation = fieldValidationMap[key];
     for (const validation of [fieldValidation, globalValidation]) {
       if (!validation) continue;
       if (event === 'onMount' && !validateOnMount) continue;

@@ -10,9 +10,9 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
   {
     formRef,
     initialValues = {},
-    onChange: onChangeCallback,
-    onSubmit: onSubmitCallback,
-    onReset: onResetCallback,
+    onChange,
+    onSubmit,
+    onReset,
     debug,
   }: FormHandlerProps<T>,
 ): FormHandlerReturn<T> => {
@@ -49,7 +49,7 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
     return validationsContext.validate({ keys: keys, event: 'onChange' });
   };
 
-  const setData = (
+  const setData = async (
     newData: typeof data,
     options?: { override?: boolean; skipFieldValidations?: Array<KeyOf<T>> },
   ) => {
@@ -57,9 +57,9 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
     const allNewData = override ? newData : { ...data, ...newData };
     if (typeof debug === 'string') console.log(`Form (${debug}) data:`, allNewData);
     else if (debug) console.log('Form data:', allNewData);
-    new Promise(() => onChangeCallback?.(allNewData));
-    validateOnChange(allNewData, { skipFieldValidations });
     _setData(allNewData);
+    validateOnChange(allNewData, { skipFieldValidations });
+    onChange?.(allNewData);
   };
 
   const getValue: FormHandlerReturn<T>['getValue'] = (name) =>
@@ -78,7 +78,7 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
         if (skipValidation) skipFieldValidations.push(name);
       }
     }
-    if (fieldsChangingCount > 0) setData(newData, { skipFieldValidations });
+    if (fieldsChangingCount > 0) await setData(newData, { skipFieldValidations });
   };
 
   const setValue: FormHandlerReturn<T>['setValue'] = async (name, value, options) =>
@@ -100,16 +100,16 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
     try {
       const result = await validationsContext.validate({ event: 'onSubmit' });
       const { isValid, errors } = readFormValidationResult(result);
-      if (isValid) await onSubmitCallback?.({ ok: true, data: data as T });
-      else await onSubmitCallback?.({ ok: false, errors });
+      if (isValid) await onSubmit?.({ ok: true, data: data as T });
+      else await onSubmit?.({ ok: false, errors });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const reset: FormHandlerReturn<T>['reset'] = async () => {
-    setData(initialValues, { override: true });
-    onResetCallback?.();
+    await setData(initialValues, { override: true });
+    onReset?.();
   };
 
   useOnMountEffect(() => {
