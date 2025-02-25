@@ -10,7 +10,11 @@ export type RenderProp<T extends Record<string, any> = Record<string, any>> = <
   props: P,
 ) => Children;
 
-export type KeyOf<T extends Record<string, any> = Record<string, any>> = Extract<
-  keyof T,
+export type KeyOf<T extends Record<string, any> = Record<string, any>, V = any> = Extract<
+  { [K in keyof T]: T[K] extends V ? K : never }[keyof T],
   string
 >;
+
+export type BasicDataTypes = string | number | boolean;
+
+export type ArrayDataTypes = Array<any> | ReadonlyArray<any>;

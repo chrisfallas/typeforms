@@ -5,13 +5,12 @@ import { FieldComponent, FieldProps } from '../types/Field';
 
 const Field: FieldComponent = <K extends KeyOf = KeyOf, V = any>({
   component,
-  children,
   ...rest
 }: FieldProps<K, V>) => {
   const fieldContext = useFieldHandler<K, V>(rest);
   return (
     <FieldContext.Provider value={fieldContext}>
-      {component ? component(fieldContext) : children}
+      {component?.(fieldContext)}
     </FieldContext.Provider>
   );
 };

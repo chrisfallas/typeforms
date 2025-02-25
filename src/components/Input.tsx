@@ -1,11 +1,12 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, HTMLInputTypeAttribute } from 'react';
 import useFieldHandler from '../hooks/useFieldHandler';
-import { KeyOf } from '../types/Global';
+import { BasicDataTypes, KeyOf } from '../types/Global';
 import { InputComponent, InputProps } from '../types/Input';
 
 const Input: InputComponent = <K extends KeyOf = KeyOf, V = any>({
   domRef,
   fieldRef,
+  type,
   name,
   onChange,
   onBlur,
@@ -33,7 +34,9 @@ const Input: InputComponent = <K extends KeyOf = KeyOf, V = any>({
   });
 
   const onChangeHandler = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    const value = target.type === 'number' ? +target.value : target.value;
+    let value: BasicDataTypes = target.value;
+    if (target.type === 'number' || target.type === 'range') value = +target.value;
+    if (target.type === 'checkbox') value = target.checked;
     setValue(value as V);
   };
 
@@ -45,6 +48,7 @@ const Input: InputComponent = <K extends KeyOf = KeyOf, V = any>({
   return (
     <input
       ref={domRef}
+      type={type as HTMLInputTypeAttribute}
       name={name}
       value={String(value)}
       onChange={onChangeHandler}

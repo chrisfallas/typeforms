@@ -7,7 +7,8 @@ export const readFormValidationResult = <T extends Record<string, any>>(
 ): FormErrors<T> => {
   const value: FormErrors<T> = { isValid: true, errors: {} };
 
-  for (const key in validationResultMap) {
+  for (const validationResultMapKey in validationResultMap) {
+    const key = validationResultMapKey as keyof typeof validationResultMap;
     const validationResult = validationResultMap[key];
     const { isValid, errors } = readFieldValidationResult(validationResult);
     if (isValid) continue;

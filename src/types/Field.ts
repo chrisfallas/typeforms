@@ -3,8 +3,7 @@ import { Child, KeyOf, RenderProp } from './Global';
 import { FieldHandlerProps, FieldHandlerReturn } from './FieldHandler';
 
 export interface FieldProps<K extends KeyOf = KeyOf, V = any>
-  extends FieldHandlerProps<K, V>,
-    PropsWithChildren<{}> {
+  extends FieldHandlerProps<K, V> {
   component?: RenderProp<FieldHandlerReturn<K, V>>;
 }
 
