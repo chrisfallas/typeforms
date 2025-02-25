@@ -4,12 +4,12 @@ import { FieldHandlerReturn } from '../types/FieldHandler';
 
 export type FieldContext<K extends KeyOf = KeyOf, V = any> = FieldHandlerReturn<K, V>;
 
-const FieldContext = createContext({} as FieldContext);
+const FieldContext = createContext<FieldContext | null>(null);
 
 export const useFieldContext = <K extends KeyOf = KeyOf, V = any>() => {
   const context = useContext(FieldContext);
 
-  if (!Object.keys(context).length) {
+  if (!context) {
     throw new Error('useFieldContext must be used from a Field child component');
   }
 

@@ -4,14 +4,14 @@ import { ValidationsHandlerReturn } from '../types/ValidationsHandler';
 export type ValidationsContext<T extends Record<string, any> = Record<string, any>> =
   ValidationsHandlerReturn<T>;
 
-const ValidationsContext = createContext({} as ValidationsContext);
+const ValidationsContext = createContext<ValidationsContext | null>(null);
 
 export const useValidationsContext = <
   T extends Record<string, any> = Record<string, any>,
 >() => {
   const context = useContext(ValidationsContext);
 
-  if (!Object.keys(context).length) {
+  if (!context) {
     throw new Error('useFieldContext must be used from a Field child component');
   }
 

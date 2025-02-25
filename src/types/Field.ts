@@ -15,7 +15,4 @@ export type FieldComponent<T extends Record<string, any> = Record<string, any>> 
   props: PropsWithChildren<FieldProps<K, V>>,
 ) => Child;
 
-export type FieldComponentProps<K extends KeyOf = KeyOf, V = any> = FieldHandlerReturn<
-  K,
-  V
->;
+export type FieldComponentProps<V> = FieldHandlerReturn<string, V>;
