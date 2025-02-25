@@ -24,7 +24,7 @@ const useFieldHandler = <K extends KeyOf = KeyOf, V = any>({
 
   const { isValid, errors } = useFieldErrors(name);
 
-  const handleSetValue: FieldHandlerReturn<K, V>['setValue'] = async (value, options) => {
+  const setOwnValue: FieldHandlerReturn<K, V>['setValue'] = async (value, options) => {
     await setValue(name, value, { skipValidation: options?.skipValidation });
     onChange?.(value);
   };
@@ -32,6 +32,10 @@ const useFieldHandler = <K extends KeyOf = KeyOf, V = any>({
   const validate: FieldHandlerReturn<K, V>['validate'] = async () => {
     const result = await validationsContext.validate({ keys: [name], event: 'manual' });
     return readFieldValidationResult(result[name]);
+  };
+
+  const cleanErrors: FieldHandlerReturn<K, V>['cleanErrors'] = () => {
+    validationsContext.cleanErrors([name]);
   };
 
   const blur: FieldHandlerReturn<K, V>['blur'] = () => {
@@ -60,8 +64,9 @@ const useFieldHandler = <K extends KeyOf = KeyOf, V = any>({
     value,
     errors,
     isValid,
-    setValue: handleSetValue,
+    setValue: setOwnValue,
     validate,
+    cleanErrors,
     blur,
   };
 

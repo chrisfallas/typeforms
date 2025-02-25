@@ -22,7 +22,7 @@ const useValidationsHandler = <T extends Record<string, any> = Record<string, an
     Partial<Record<KeyOf<T>, FieldValidationData>>
   >({});
 
-  const [validationResultMap, setValidationResultMap] = useState<
+  const [validationResultMap, _setValidationResultMap] = useState<
     ValidationsHandlerReturn<T>['validationResultMap']
   >({});
 
@@ -36,36 +36,47 @@ const useValidationsHandler = <T extends Record<string, any> = Record<string, an
     };
   };
 
-  const updateValidationResultMap = async (
-    partialValidationResultMap: Partial<typeof validationResultMap>,
+  const setValidationResultMap = async (
+    newValidationResultMap: Partial<typeof validationResultMap>,
+    options?: { override?: boolean },
   ) => {
-    setValidationResultMap((prevState) => ({
-      ...prevState,
-      ...partialValidationResultMap,
-    }));
+    if (options?.override) return _setValidationResultMap(newValidationResultMap);
+    _setValidationResultMap((prev) => ({ ...prev, ...newValidationResultMap }));
   };
 
-  const getFieldValidations = (key: KeyOf<T>, event: FieldValidationEvent) => {
-    const fieldValidations: Array<FieldValidationCallback> = [];
+  const getAllKeysWithValidation = () => {
+    const keys = new Set<KeyOf<T>>();
+    for (const key in fieldValidationDataMapRef.current) keys.add(key as KeyOf<T>);
+    for (const key in validations) keys.add(key as KeyOf<T>);
+    return Array.from(keys);
+  };
+
+  const getFieldValidationFlags = (key: KeyOf<T>) => {
     const {
-      validation: fieldValidation,
       validateOnMount = globalValidateOnMount,
       validateOnSubmit = globalValidateOnSubmit,
       validateOnChange = globalValidateOnChange,
       validateOnBlur = globalValidateOnBlur,
     } = fieldValidationDataMapRef.current[key] ?? {};
-    const fieldValidationMap =
+    return { validateOnMount, validateOnSubmit, validateOnChange, validateOnBlur };
+  };
+
+  const getFieldValidations = (key: KeyOf<T>, event: FieldValidationEvent) => {
+    const { validateOnMount, validateOnSubmit, validateOnChange, validateOnBlur } =
+      getFieldValidationFlags(key);
+    if (event === 'onMount' && !validateOnMount) return [];
+    if (event === 'onReset' && !validateOnMount) return [];
+    if (event === 'onSubmit' && !validateOnSubmit) return [];
+    if (event === 'onChange' && !validateOnChange) return [];
+    if (event === 'onBlur' && !validateOnBlur) return [];
+    const fieldValidationCallbacks: Array<FieldValidationCallback> = [];
+    const fieldOwnValidation = fieldValidationDataMapRef.current[key]?.validation;
+    if (fieldOwnValidation) fieldValidationCallbacks.push(fieldOwnValidation);
+    const globalFieldValidationMap =
       typeof validations === 'function' ? validations(dataRef.current) : validations;
-    const globalValidation = fieldValidationMap[key];
-    for (const validation of [fieldValidation, globalValidation]) {
-      if (!validation) continue;
-      if (event === 'onMount' && !validateOnMount) continue;
-      if (event === 'onSubmit' && !validateOnSubmit) continue;
-      if (event === 'onChange' && !validateOnChange) continue;
-      if (event === 'onBlur' && !validateOnBlur) continue;
-      fieldValidations.push(validation);
-    }
-    return fieldValidations;
+    const globalFieldValidation = globalFieldValidationMap[key];
+    if (globalFieldValidation) fieldValidationCallbacks.push(globalFieldValidation);
+    return fieldValidationCallbacks;
   };
 
   const validateField =
@@ -82,13 +93,7 @@ const useValidationsHandler = <T extends Record<string, any> = Record<string, an
 
     if (keys?.length === 0) return returnValue;
 
-    let keysToValidate = keys ? new Set(keys) : null;
-    if (!keysToValidate) {
-      keysToValidate = new Set();
-      for (const key in fieldValidationDataMapRef.current)
-        keysToValidate.add(key as KeyOf<T>);
-      for (const key in validations) keysToValidate.add(key as KeyOf<T>);
-    }
+    const keysToValidate = keys ?? getAllKeysWithValidation();
 
     const validationPromises: Array<ReturnType<ReturnType<typeof validateField>>> = [];
 
@@ -117,9 +122,22 @@ const useValidationsHandler = <T extends Record<string, any> = Record<string, an
       }
     }
 
-    if (!skipStateUpdate) updateValidationResultMap(returnValue);
+    if (!skipStateUpdate) {
+      setValidationResultMap(returnValue, { override: event === 'onReset' });
+    }
 
     return returnValue;
+  };
+
+  const cleanErrors: ValidationsHandlerReturn<T>['cleanErrors'] = (keys) => {
+    if (!keys?.length) return _setValidationResultMap({});
+    const keysToClean = getAllKeysWithValidation();
+    if (!keysToClean?.length) return;
+    _setValidationResultMap((prev) => {
+      const newState = { ...prev };
+      for (const key of keysToClean) delete newState[key];
+      return newState;
+    });
   };
 
   return {
@@ -127,6 +145,7 @@ const useValidationsHandler = <T extends Record<string, any> = Record<string, an
     validationResultMap,
     registerFieldValidationData,
     validate,
+    cleanErrors,
   };
 };
 

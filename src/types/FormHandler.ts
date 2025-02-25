@@ -11,7 +11,6 @@ export interface FormHandlerProps<T extends Record<string, any> = Record<string,
     result: OnSubmitResultSuccess<T> | OnSubmitResultError<T>,
   ) => Promise<any> | any;
   onReset?: () => Promise<any> | any;
-  debug?: boolean | string;
 }
 
 export interface FormHandlerReturn<T extends Record<string, any> = Record<string, any>> {
@@ -33,6 +32,7 @@ export interface FormHandlerReturn<T extends Record<string, any> = Record<string
     keys?: Array<K>;
     skipStateUpdate?: boolean;
   }) => Promise<FormErrors<T>>;
+  cleanErrors: <K extends KeyOf<T> = KeyOf<T>>(keys?: Array<K>) => void;
   submit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
   reset: () => Promise<void>;
 }

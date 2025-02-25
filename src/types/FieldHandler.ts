@@ -18,5 +18,6 @@ export interface FieldHandlerReturn<K extends KeyOf = KeyOf, V = any> {
   isValid: FieldErrors['isValid'];
   setValue: (value: V, options?: { skipValidation?: boolean }) => Promise<void>;
   validate: () => Promise<FieldErrors>;
+  cleanErrors: () => void;
   blur: () => void;
 }

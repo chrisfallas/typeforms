@@ -3,23 +3,19 @@ import useOnMountEffect from './useOnMountEffect';
 import { readFormValidationResult } from '../utils/validations';
 import { KeyOf } from '../types/Global';
 import { FormHandlerProps, FormHandlerReturn } from '../types/FormHandler';
-import { ValidationsHandlerReturn } from '../types/ValidationsHandler';
+import {
+  FieldValidationEvent,
+  ValidationsHandlerReturn,
+} from '../types/ValidationsHandler';
 
 const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
   validationsContext: ValidationsHandlerReturn<T>,
-  {
-    formRef,
-    initialValues = {},
-    onChange,
-    onSubmit,
-    onReset,
-    debug,
-  }: FormHandlerProps<T>,
+  { formRef, initialValues = {}, onChange, onSubmit, onReset }: FormHandlerProps<T>,
 ): FormHandlerReturn<T> => {
   const [data, _setData] = useState<FormHandlerReturn<T>['data']>(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { dataRef, validationResultMap } = validationsContext;
+  const { dataRef, validationResultMap, cleanErrors } = validationsContext;
 
   dataRef.current = data;
 
@@ -34,32 +30,35 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
     [validationResultMap],
   );
 
-  const validateOnChange = async (
-    newData: typeof data,
-    options?: { skipFieldValidations?: Array<KeyOf<T>> },
-  ) => {
-    const { skipFieldValidations } = options ?? {};
-    const keys: Array<KeyOf<T>> = [];
-    for (const key in { ...data, ...newData }) {
-      if (skipFieldValidations?.includes(key as KeyOf<T>)) continue;
-      if (data[key] !== newData[key]) keys.push(key as KeyOf<T>);
-    }
-    if (keys.length === 0) return;
-    dataRef.current = newData;
-    return validationsContext.validate({ keys: keys, event: 'onChange' });
-  };
-
   const setData = async (
     newData: typeof data,
-    options?: { override?: boolean; skipFieldValidations?: Array<KeyOf<T>> },
+    options?: { isResetting?: boolean; skipValidations?: boolean | Array<KeyOf<T>> },
   ) => {
-    const { override, skipFieldValidations } = options ?? {};
-    const allNewData = override ? newData : { ...data, ...newData };
-    if (typeof debug === 'string') console.log(`Form (${debug}) data:`, allNewData);
-    else if (debug) console.log('Form data:', allNewData);
-    _setData(allNewData);
-    validateOnChange(allNewData, { skipFieldValidations });
-    onChange?.(allNewData);
+    const { isResetting, skipValidations } = options ?? {};
+    if (!isResetting) _setData((prev) => ({ ...prev, ...newData }));
+    else _setData(newData);
+    await validateNewData(newData, { isResetting, skipValidations });
+    onChange?.(isResetting ? newData : { ...data, ...newData });
+  };
+
+  const validateNewData = async (
+    newData: typeof data,
+    options?: { isResetting?: boolean; skipValidations?: boolean | Array<KeyOf<T>> },
+  ) => {
+    const { isResetting, skipValidations } = options ?? {};
+    let keys: Array<KeyOf<T>> | undefined = undefined;
+    if (!isResetting) {
+      keys = [];
+      for (const newDataKey in newData) {
+        const key = newDataKey as KeyOf<T>;
+        if (typeof skipValidations === 'boolean' && skipValidations) continue;
+        if (Array.isArray(skipValidations) && skipValidations.includes(key)) continue;
+        keys.push(key);
+      }
+    }
+    dataRef.current = isResetting ? newData : { ...dataRef.current, ...newData };
+    const event: FieldValidationEvent = isResetting ? 'onReset' : 'onChange';
+    return validationsContext.validate({ keys, event });
   };
 
   const getValue: FormHandlerReturn<T>['getValue'] = (name) =>
@@ -68,17 +67,17 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
   const setValues: FormHandlerReturn<T>['setValues'] = async (values) => {
     const newData: typeof data = {};
     let fieldsChangingCount = 0;
-    const skipFieldValidations: Array<KeyOf<T>> = [];
+    const skipValidations: Array<KeyOf<T>> = [];
     for (const { name, value, skipValidation } of values) {
       if (!name) continue;
       if (['', undefined, null].includes(value)) newData[name] = undefined;
       else newData[name] = value;
       if (newData[name] !== getValue(name)) {
         fieldsChangingCount++;
-        if (skipValidation) skipFieldValidations.push(name);
+        if (skipValidation) skipValidations.push(name);
       }
     }
-    if (fieldsChangingCount > 0) await setData(newData, { skipFieldValidations });
+    if (fieldsChangingCount > 0) await setData(newData, { skipValidations });
   };
 
   const setValue: FormHandlerReturn<T>['setValue'] = async (name, value, options) =>
@@ -108,7 +107,7 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
   };
 
   const reset: FormHandlerReturn<T>['reset'] = async () => {
-    await setData(initialValues, { override: true });
+    await setData(initialValues, { isResetting: true });
     onReset?.();
   };
 
@@ -126,6 +125,7 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
     setValue,
     setValues,
     validate,
+    cleanErrors,
     submit,
     reset,
   };

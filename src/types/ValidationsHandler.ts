@@ -3,12 +3,8 @@ import { KeyOf } from './Global';
 
 export interface ValidationsHandlerProps<
   T extends Record<string, any> = Record<string, any>,
-> {
+> extends ValidationEventFlags {
   validations?: FormValidationCallback<T> | FieldValidationMap<T>;
-  validateOnMount?: boolean;
-  validateOnSubmit?: boolean;
-  validateOnChange?: boolean;
-  validateOnBlur?: boolean;
 }
 
 export interface ValidationsHandlerReturn<
@@ -25,15 +21,12 @@ export interface ValidationsHandlerReturn<
     skipStateUpdate?: boolean;
     event?: FieldValidationEvent;
   }) => Promise<Partial<Record<KeyOf<T>, ValidationResult>>>;
+  cleanErrors: (keys?: Array<KeyOf<T>>) => void;
 }
 
-export type FieldValidationData<V = any> = {
+export interface FieldValidationData<V = any> extends ValidationEventFlags {
   validation?: FieldValidationCallback<V>;
-  validateOnMount?: boolean;
-  validateOnSubmit?: boolean;
-  validateOnChange?: boolean;
-  validateOnBlur?: boolean;
-};
+}
 
 export type FormValidationCallback<T extends Record<string, any> = Record<string, any>> =
   (data: Partial<T>) => FieldValidationMap<T>;
@@ -54,4 +47,12 @@ export type FieldValidationEvent =
   | 'onSubmit'
   | 'onChange'
   | 'onBlur'
+  | 'onReset'
   | 'manual';
+
+export interface ValidationEventFlags {
+  validateOnMount?: boolean;
+  validateOnSubmit?: boolean;
+  validateOnChange?: boolean;
+  validateOnBlur?: boolean;
+}

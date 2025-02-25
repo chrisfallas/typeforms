@@ -11,7 +11,6 @@ const Form: FormComponent = <T extends Record<number, any> = Record<number, any>
   onChange,
   onSubmit,
   onReset,
-  debug,
   validations,
   validateOnMount,
   validateOnSubmit,
@@ -35,7 +34,6 @@ const Form: FormComponent = <T extends Record<number, any> = Record<number, any>
     onChange,
     onSubmit,
     onReset,
-    debug,
   });
 
   const { submit, reset } = formContext;
