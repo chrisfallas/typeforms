@@ -1,18 +1,23 @@
 import { Child, KeyOf } from './Global';
-import { InputProps } from './Input';
+import { DetailedHTMLProps, InputHTMLAttributes, RefObject } from 'react';
+import { FieldHandlerProps } from './FieldHandler';
 
-interface NumericFieldOwnProps {
-  type?: InputTypes;
+type HTMLInputProps = DetailedHTMLProps<
+  InputHTMLAttributes<HTMLInputElement>,
+  HTMLInputElement
+>;
+
+interface NumericFieldOwnProps<K extends KeyOf> extends FieldHandlerProps<K, number> {
+  type?: 'number' | 'range';
+  domRef?: RefObject<HTMLInputElement>;
 }
 
 export interface NumericFieldProps<K extends KeyOf = KeyOf>
-  extends NumericFieldOwnProps,
-    Omit<InputProps<K, number | undefined>, 'type' | keyof NumericFieldOwnProps> {}
+  extends NumericFieldOwnProps<K>,
+    Omit<HTMLInputProps, keyof NumericFieldOwnProps<K> | 'children'> {}
 
 export type NumericFieldComponent<T extends Record<string, any> = Record<string, any>> = <
   K extends KeyOf<T, number> = KeyOf<T, number>,
 >(
   props: NumericFieldProps<K>,
 ) => Child;
-
-type InputTypes = 'number' | 'range';

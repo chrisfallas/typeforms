@@ -14,7 +14,3 @@ export type KeyOf<T extends Record<string, any> = Record<string, any>, V = any> 
   { [K in keyof T]: T[K] extends V ? K : never }[keyof T],
   string
 >;
-
-export type BasicDataTypes = string | number | boolean;
-
-export type ArrayDataTypes = Array<any> | ReadonlyArray<any>;

@@ -4,6 +4,7 @@ import TextField from './components/TextField';
 import TextArea from './components/TextArea';
 import NumericField from './components/NumericField';
 import Checkbox from './components/Checkbox';
+import Select from './components/Select';
 import Error from './components/Error';
 import { useFormContext } from './contexts/FormContext';
 import { useFieldContext } from './contexts/FieldContext';
@@ -17,6 +18,7 @@ import { TextFieldComponent, TextFieldProps } from './types/TextField';
 import { TextAreaComponent, TextAreaProps } from './types/TextArea';
 import { NumericFieldComponent, NumericFieldProps } from './types/NumericField';
 import { CheckboxComponent, CheckboxProps } from './types/Checkbox';
+import { SelectComponent, SelectProps } from './types/Select';
 import { ErrorComponent, ErrorProps } from './types/Error';
 
 interface TypeForm<T extends Record<string, any> = Record<string, any>> {
@@ -26,6 +28,7 @@ interface TypeForm<T extends Record<string, any> = Record<string, any>> {
   TextArea: TextAreaComponent<T>;
   NumericField: NumericFieldComponent<T>;
   Checkbox: CheckboxComponent<T>;
+  Select: SelectComponent<T>;
   Error: ErrorComponent<T>;
   useFormRef: FormRefHook<T>;
   useFieldRef: FieldRefHook<T>;
@@ -38,6 +41,7 @@ const TypeForm = <T extends Record<string, any>>(): TypeForm<T> => ({
   TextArea: TextArea as TypeForm<T>['TextArea'],
   NumericField: NumericField as TypeForm<T>['NumericField'],
   Checkbox: Checkbox as TypeForm<T>['Checkbox'],
+  Select: Select as TypeForm<T>['Select'],
   Error: Error as TypeForm<T>['Error'],
   useFormRef: useFormRef as TypeForm<T>['useFormRef'],
   useFieldRef: useFieldRef as TypeForm<T>['useFieldRef'],
@@ -49,11 +53,12 @@ export { useFormContext, useFieldContext, useFormErrors, useFieldErrors };
 
 export type {
   FormProps,
-  FieldProps,
+  // FieldProps,
   FieldComponentProps,
-  TextFieldProps,
-  TextAreaProps,
-  NumericFieldProps,
-  CheckboxProps,
-  ErrorProps,
+  // TextFieldProps,
+  // TextAreaProps,
+  // NumericFieldProps,
+  // CheckboxProps,
+  // SelectProps,
+  // ErrorProps,
 };

@@ -1,5 +1,5 @@
 import { DetailedHTMLProps, TextareaHTMLAttributes, RefObject } from 'react';
-import { BasicDataTypes, Child, KeyOf } from './Global';
+import { Child, KeyOf } from './Global';
 import { FieldHandlerProps } from './FieldHandler';
 
 type HTMLTextAreaProps = DetailedHTMLProps<
@@ -7,18 +7,16 @@ type HTMLTextAreaProps = DetailedHTMLProps<
   HTMLTextAreaElement
 >;
 
-interface TextAreaOwnProps<K extends KeyOf = KeyOf, V = any>
-  extends FieldHandlerProps<K, V> {
+interface TextAreaOwnProps<K extends KeyOf> extends FieldHandlerProps<K, string> {
   domRef?: RefObject<HTMLTextAreaElement>;
 }
 
-export interface TextAreaProps<K extends KeyOf = KeyOf, V = any>
-  extends TextAreaOwnProps<K, V>,
-    Omit<HTMLTextAreaProps, keyof TextAreaOwnProps<K, V> | 'children'> {}
+export interface TextAreaProps<K extends KeyOf = KeyOf>
+  extends TextAreaOwnProps<K>,
+    Omit<HTMLTextAreaProps, keyof TextAreaOwnProps<K> | 'children'> {}
 
 export type TextAreaComponent<T extends Record<string, any> = Record<string, any>> = <
-  K extends KeyOf<T, BasicDataTypes> = KeyOf<T, BasicDataTypes>,
-  V = T[K],
+  K extends KeyOf<T, string> = KeyOf<T, string>,
 >(
-  props: TextAreaProps<K, V>,
+  props: TextAreaProps<K>,
 ) => Child;

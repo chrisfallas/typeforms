@@ -7,7 +7,7 @@ export interface FieldHandlerProps<K extends KeyOf = KeyOf, V = any>
   extends FieldValidationData<V> {
   fieldRef?: RefObject<FieldContext>;
   name: K;
-  onChange?: (value: V) => Promise<any> | any;
+  onChange?: (value: V | undefined) => Promise<any> | any;
 }
 
 export interface FieldHandlerReturn<K extends KeyOf = KeyOf, V = any> {
@@ -15,7 +15,10 @@ export interface FieldHandlerReturn<K extends KeyOf = KeyOf, V = any> {
   value: V | undefined;
   errors?: FieldErrors['errors'];
   isValid: FieldErrors['isValid'];
-  setValue: (value: V, options?: { skipValidation?: boolean }) => Promise<void>;
+  setValue: (
+    value: V | undefined,
+    options?: { skipValidation?: boolean },
+  ) => Promise<void>;
   validate: () => Promise<FieldErrors>;
   cleanErrors: () => void;
   blur: () => void;

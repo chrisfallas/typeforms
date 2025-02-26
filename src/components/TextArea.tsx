@@ -3,7 +3,7 @@ import useFieldHandler from '../hooks/useFieldHandler';
 import { KeyOf } from '../types/Global';
 import { TextAreaComponent, TextAreaProps } from '../types/TextArea';
 
-const TextArea: TextAreaComponent = <K extends KeyOf = KeyOf, V = any>({
+const TextArea: TextAreaComponent = <K extends KeyOf = KeyOf>({
   domRef,
   fieldRef,
   name,
@@ -15,13 +15,13 @@ const TextArea: TextAreaComponent = <K extends KeyOf = KeyOf, V = any>({
   validateOnChange,
   validateOnBlur,
   ...rest
-}: TextAreaProps<K, V>) => {
+}: TextAreaProps<K>) => {
   const {
     value = '',
     isValid,
     setValue,
     blur,
-  } = useFieldHandler<K, V>({
+  } = useFieldHandler<K, string>({
     fieldRef,
     name,
     onChange,
@@ -33,7 +33,7 @@ const TextArea: TextAreaComponent = <K extends KeyOf = KeyOf, V = any>({
   });
 
   const onChangeHandler = ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(target.value as V);
+    setValue(target.value);
   };
 
   const onBlurHandler = (event: FocusEvent<HTMLTextAreaElement>) => {
@@ -45,7 +45,7 @@ const TextArea: TextAreaComponent = <K extends KeyOf = KeyOf, V = any>({
     <textarea
       ref={domRef}
       name={name}
-      value={String(value)}
+      value={value}
       onChange={onChangeHandler}
       onBlur={onBlurHandler}
       aria-invalid={!isValid}
