@@ -1,12 +1,9 @@
 import { DetailedHTMLProps, HTMLAttributes, RefObject } from 'react';
 import { Child, KeyOf, RenderProp } from './Global';
 
-export type HTMLErrorProps = DetailedHTMLProps<
-  HTMLAttributes<HTMLSpanElement>,
-  HTMLSpanElement
->;
+type HTMLErrorProps = DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>;
 
-export interface ErrorOwnProps<K extends KeyOf = KeyOf> {
+interface ErrorOwnProps<K extends KeyOf = KeyOf> {
   domRef?: RefObject<HTMLSpanElement>;
   htmlFor: K;
   index?: number;

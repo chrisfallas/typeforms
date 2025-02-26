@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { ValidationsHandlerReturn } from '../types/ValidationsHandler';
+import { ValidationsHandlerReturn } from '../types/Validations';
 
 export type ValidationsContext<T extends Record<string, any> = Record<string, any>> =
   ValidationsHandlerReturn<T>;

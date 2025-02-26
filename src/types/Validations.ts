@@ -56,3 +56,13 @@ export interface ValidationEventFlags {
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
 }
+
+export interface FieldErrors {
+  isValid: boolean;
+  errors: Array<string>;
+}
+
+export interface FormErrors<T extends Record<string, any> = Record<string, any>> {
+  isValid: boolean;
+  errors: Partial<Record<KeyOf<T>, Array<string>>>;
+}

@@ -6,14 +6,14 @@ import {
 } from 'react';
 import { Child, RenderProp } from './Global';
 import { FormHandlerProps, FormHandlerReturn } from './FormHandler';
-import { ValidationsHandlerProps } from './ValidationsHandler';
+import { ValidationsHandlerProps } from './Validations';
 
-export type HTMLFormProps = DetailedHTMLProps<
+type HTMLFormProps = DetailedHTMLProps<
   FormHTMLAttributes<HTMLFormElement>,
   HTMLFormElement
 >;
 
-export interface FormOwnProps<T extends Record<string, any> = Record<string, any>>
+interface FormOwnProps<T extends Record<string, any> = Record<string, any>>
   extends FormHandlerProps<T>,
     ValidationsHandlerProps<T>,
     PropsWithChildren<{}> {

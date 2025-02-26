@@ -1,9 +1,9 @@
 import { ChangeEvent, FocusEvent } from 'react';
 import useFieldHandler from '../hooks/useFieldHandler';
 import { KeyOf } from '../types/Global';
-import { InputComponent, InputProps } from '../types/Input';
+import { TextAreaComponent, TextAreaProps } from '../types/TextArea';
 
-const Input: InputComponent = <K extends KeyOf = KeyOf, V = any>({
+const TextArea: TextAreaComponent = <K extends KeyOf = KeyOf, V = any>({
   domRef,
   fieldRef,
   name,
@@ -15,7 +15,7 @@ const Input: InputComponent = <K extends KeyOf = KeyOf, V = any>({
   validateOnChange,
   validateOnBlur,
   ...rest
-}: InputProps<K, V>) => {
+}: TextAreaProps<K, V>) => {
   const {
     value = '',
     isValid,
@@ -32,20 +32,17 @@ const Input: InputComponent = <K extends KeyOf = KeyOf, V = any>({
     validateOnBlur,
   });
 
-  const onChangeHandler = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    let value: string | number | boolean = target.value;
-    if (target.type === 'number' || target.type === 'range') value = +target.value;
-    else if (target.type === 'checkbox') value = target.checked;
-    setValue(value as V);
+  const onChangeHandler = ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
+    setValue(target.value as V);
   };
 
-  const onBlurHandler = (event: FocusEvent<HTMLInputElement>) => {
+  const onBlurHandler = (event: FocusEvent<HTMLTextAreaElement>) => {
     blur();
     onBlur?.(event);
   };
 
   return (
-    <input
+    <textarea
       ref={domRef}
       name={name}
       value={String(value)}
@@ -57,4 +54,4 @@ const Input: InputComponent = <K extends KeyOf = KeyOf, V = any>({
   );
 };
 
-export default Input;
+export default TextArea;

@@ -1,7 +1,7 @@
 import { FormEvent, RefObject } from 'react';
 import { KeyOf } from './Global';
-import { FormErrors } from './ValidationErrors';
 import { FormContext } from '../contexts/FormContext';
+import { FormErrors } from './Validations';
 
 export interface FormHandlerProps<T extends Record<string, any> = Record<string, any>> {
   formRef?: RefObject<FormContext<T>>;

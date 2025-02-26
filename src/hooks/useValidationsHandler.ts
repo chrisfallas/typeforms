@@ -7,7 +7,7 @@ import {
   ValidationsHandlerProps,
   ValidationsHandlerReturn,
   FieldValidationData,
-} from '../types/ValidationsHandler';
+} from '../types/Validations';
 
 const useValidationsHandler = <T extends Record<string, any> = Record<string, any>>({
   validations = {},

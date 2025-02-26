@@ -1,10 +1,10 @@
 import { useEffect, useImperativeHandle } from 'react';
 import { useFormContext } from '../contexts/FormContext';
 import { useValidationsContext } from '../contexts/ValidationsContext';
-import { useFieldErrors } from './useValidationErrors';
 import { readFieldValidationResult } from '../utils/validations';
 import { FieldHandlerProps, FieldHandlerReturn } from '../types/FieldHandler';
 import { KeyOf } from '../types/Global';
+import { useFieldErrors } from './useFieldErrors';
 
 const useFieldHandler = <K extends KeyOf = KeyOf, V = any>({
   fieldRef,

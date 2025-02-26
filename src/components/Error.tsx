@@ -1,6 +1,6 @@
-import { useFieldErrors } from '../hooks/useValidationErrors';
 import { ErrorComponent, ErrorProps } from '../types/Error';
 import { KeyOf } from '../types/Global';
+import { useFieldErrors } from '../hooks/useFieldErrors';
 
 const Error: ErrorComponent = <K extends KeyOf = KeyOf>({
   domRef,

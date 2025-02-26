@@ -3,10 +3,7 @@ import useOnMountEffect from './useOnMountEffect';
 import { readFormValidationResult } from '../utils/validations';
 import { KeyOf } from '../types/Global';
 import { FormHandlerProps, FormHandlerReturn } from '../types/FormHandler';
-import {
-  FieldValidationEvent,
-  ValidationsHandlerReturn,
-} from '../types/ValidationsHandler';
+import { FieldValidationEvent, ValidationsHandlerReturn } from '../types/Validations';
 
 const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
   validationsContext: ValidationsHandlerReturn<T>,

@@ -1,24 +1,14 @@
-import {
-  DetailedHTMLProps,
-  HTMLInputTypeAttribute,
-  InputHTMLAttributes,
-  RefObject,
-} from 'react';
+import { DetailedHTMLProps, InputHTMLAttributes, RefObject } from 'react';
 import { BasicDataTypes, Child, KeyOf } from './Global';
 import { FieldHandlerProps } from './FieldHandler';
 
-export type HTMLInputProps = DetailedHTMLProps<
+type HTMLInputProps = DetailedHTMLProps<
   InputHTMLAttributes<HTMLInputElement>,
   HTMLInputElement
 >;
 
-export interface InputOwnProps<K extends KeyOf = KeyOf, V = any>
+interface InputOwnProps<K extends KeyOf = KeyOf, V = any>
   extends FieldHandlerProps<K, V> {
-  type: V extends boolean
-    ? BooleanInputTypes
-    : V extends number
-      ? NumericInputTypes
-      : StringInputTypes;
   domRef?: RefObject<HTMLInputElement>;
 }
 
@@ -32,11 +22,3 @@ export type InputComponent<T extends Record<string, any> = Record<string, any>> 
 >(
   props: InputProps<K, V>,
 ) => Child;
-
-type NumericInputTypes = 'number' | 'range';
-
-type BooleanInputTypes = 'checkbox';
-
-type StringInputTypes =
-  | Omit<HTMLInputTypeAttribute, NumericInputTypes | BooleanInputTypes>
-  | undefined;

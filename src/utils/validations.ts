@@ -1,6 +1,10 @@
 import { KeyOf } from '../types/Global';
-import { ValidationResult, ValidationsHandlerReturn } from '../types/ValidationsHandler';
-import { FieldErrors, FormErrors } from '../types/ValidationErrors';
+import {
+  FieldErrors,
+  FormErrors,
+  ValidationResult,
+  ValidationsHandlerReturn,
+} from '../types/Validations';
 
 export const readFormValidationResult = <T extends Record<string, any>>(
   validationResultMap: ValidationsHandlerReturn<T>['validationResultMap'],
