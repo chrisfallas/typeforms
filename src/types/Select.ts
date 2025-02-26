@@ -7,6 +7,8 @@ type HTMLSelectProps = DetailedHTMLProps<
   HTMLSelectElement
 >;
 
+type BannedHTMLSelectProps = 'children' | 'defaultValue' | 'multiple';
+
 interface SelectOwnProps<
   T extends Record<string, any>,
   K extends KeyOf<T, SelectFieldTypes>,
@@ -21,7 +23,7 @@ export interface SelectProps<
   K extends KeyOf<T, SelectFieldTypes> = KeyOf<T, SelectFieldTypes>,
   V extends SelectFieldTypes = T[K],
 > extends SelectOwnProps<T, K, V>,
-    Omit<HTMLSelectProps, keyof SelectOwnProps<T, K, V> | 'multiple' | 'children'> {}
+    Omit<HTMLSelectProps, keyof SelectOwnProps<T, K, V> | BannedHTMLSelectProps> {}
 
 export type SelectComponent<T extends Record<string, any> = Record<string, any>> = <
   K extends KeyOf<T, SelectFieldTypes> = KeyOf<T, SelectFieldTypes>,

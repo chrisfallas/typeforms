@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { useMemo, ChangeEvent, FocusEvent } from 'react';
 import useFieldHandler from '../hooks/useFieldHandler';
 import { TextFieldComponent } from '../types/TextField';
 
@@ -26,6 +26,11 @@ const TextField: TextFieldComponent = ({
     validateOnBlur,
   });
 
+  const checked = useMemo(() => {
+    if (rest.type !== 'checkbox' && rest.type !== 'radio') return undefined;
+    return value === rest.value;
+  }, [value, rest.value]);
+
   const onChangeHandler = ({ target }: ChangeEvent<HTMLInputElement>) => {
     setValue(target.value);
   };
@@ -39,7 +44,8 @@ const TextField: TextFieldComponent = ({
     <input
       ref={domRef}
       name={name}
-      value={String(value ?? '')}
+      value={value ?? ''}
+      checked={checked}
       onChange={onChangeHandler}
       onBlur={onBlurHandler}
       aria-invalid={!isValid}

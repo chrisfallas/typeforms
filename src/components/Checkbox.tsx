@@ -38,8 +38,9 @@ const Checkbox: CheckboxComponent = ({
   return (
     <input
       ref={domRef}
+      type="checkbox"
       name={name}
-      checked={Boolean(value)}
+      checked={value}
       onChange={onChangeHandler}
       onBlur={onBlurHandler}
       aria-invalid={!isValid}

@@ -7,16 +7,19 @@ type HTMLInputProps = DetailedHTMLProps<
   HTMLInputElement
 >;
 
+type BannedHTMLInputProps = 'children' | 'defaultValue';
+
 interface TextFieldOwnProps<T extends Record<string, any>, K extends KeyOf<T, string>>
   extends FieldHandlerProps<T, K, string> {
   domRef?: RefObject<HTMLInputElement>;
+  value?: T[K];
 }
 
 export interface TextFieldProps<
   T extends Record<string, any> = Record<string, any>,
   K extends KeyOf<T, string> = KeyOf<T, string>,
 > extends TextFieldOwnProps<T, K>,
-    Omit<HTMLInputProps, keyof TextFieldOwnProps<T, K> | 'children'> {}
+    Omit<HTMLInputProps, keyof TextFieldOwnProps<T, K> | BannedHTMLInputProps> {}
 
 export type TextFieldComponent<T extends Record<string, any> = Record<string, any>> = <
   K extends KeyOf<T, string> = KeyOf<T, string>,

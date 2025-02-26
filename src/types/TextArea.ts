@@ -7,6 +7,8 @@ type HTMLTextAreaProps = DetailedHTMLProps<
   HTMLTextAreaElement
 >;
 
+type BannedHTMLTextAreaProps = 'children' | 'defaultValue';
+
 interface TextAreaOwnProps<T extends Record<string, any>, K extends KeyOf<T, string>>
   extends FieldHandlerProps<T, K, string> {
   domRef?: RefObject<HTMLTextAreaElement>;
@@ -16,7 +18,7 @@ export interface TextAreaProps<
   T extends Record<string, any> = Record<string, any>,
   K extends KeyOf<T, string> = KeyOf<T, string>,
 > extends TextAreaOwnProps<T, K>,
-    Omit<HTMLTextAreaProps, keyof TextAreaOwnProps<T, K> | 'children'> {}
+    Omit<HTMLTextAreaProps, keyof TextAreaOwnProps<T, K> | BannedHTMLTextAreaProps> {}
 
 export type TextAreaComponent<T extends Record<string, any> = Record<string, any>> = <
   K extends KeyOf<T, string> = KeyOf<T, string>,
