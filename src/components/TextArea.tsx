@@ -1,9 +1,8 @@
 import { ChangeEvent, FocusEvent } from 'react';
 import useFieldHandler from '../hooks/useFieldHandler';
-import { KeyOf } from '../types/Global';
-import { TextAreaComponent, TextAreaProps } from '../types/TextArea';
+import { TextAreaComponent } from '../types/TextArea';
 
-const TextArea: TextAreaComponent = <K extends KeyOf = KeyOf>({
+const TextArea: TextAreaComponent = ({
   domRef,
   fieldRef,
   name,
@@ -15,13 +14,8 @@ const TextArea: TextAreaComponent = <K extends KeyOf = KeyOf>({
   validateOnChange,
   validateOnBlur,
   ...rest
-}: TextAreaProps<K>) => {
-  const {
-    value = '',
-    isValid,
-    setValue,
-    blur,
-  } = useFieldHandler<K, string>({
+}) => {
+  const { value, isValid, setValue, blur } = useFieldHandler({
     fieldRef,
     name,
     onChange,
@@ -45,7 +39,7 @@ const TextArea: TextAreaComponent = <K extends KeyOf = KeyOf>({
     <textarea
       ref={domRef}
       name={name}
-      value={value}
+      value={String(value ?? '')}
       onChange={onChangeHandler}
       onBlur={onBlurHandler}
       aria-invalid={!isValid}

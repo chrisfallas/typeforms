@@ -7,16 +7,19 @@ type HTMLTextAreaProps = DetailedHTMLProps<
   HTMLTextAreaElement
 >;
 
-interface TextAreaOwnProps<K extends KeyOf> extends FieldHandlerProps<K, string> {
+interface TextAreaOwnProps<T extends Record<string, any>, K extends KeyOf<T, string>>
+  extends FieldHandlerProps<T, K, string> {
   domRef?: RefObject<HTMLTextAreaElement>;
 }
 
-export interface TextAreaProps<K extends KeyOf = KeyOf>
-  extends TextAreaOwnProps<K>,
-    Omit<HTMLTextAreaProps, keyof TextAreaOwnProps<K> | 'children'> {}
+export interface TextAreaProps<
+  T extends Record<string, any> = Record<string, any>,
+  K extends KeyOf<T, string> = KeyOf<T, string>,
+> extends TextAreaOwnProps<T, K>,
+    Omit<HTMLTextAreaProps, keyof TextAreaOwnProps<T, K> | 'children'> {}
 
 export type TextAreaComponent<T extends Record<string, any> = Record<string, any>> = <
   K extends KeyOf<T, string> = KeyOf<T, string>,
 >(
-  props: TextAreaProps<K>,
+  props: TextAreaProps<T, K>,
 ) => Child;

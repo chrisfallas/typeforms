@@ -1,15 +1,14 @@
-import { ErrorComponent, ErrorProps } from '../types/Error';
-import { KeyOf } from '../types/Global';
 import { useFieldErrors } from '../hooks/useFieldErrors';
+import { ErrorComponent } from '../types/Error';
 
-const Error: ErrorComponent = <K extends KeyOf = KeyOf>({
+const Error: ErrorComponent = ({
   domRef,
   htmlFor,
   index = 0,
   alwaysVisible,
   render,
   ...rest
-}: ErrorProps<K>) => {
+}) => {
   const fieldErrors = useFieldErrors(htmlFor);
 
   const { isValid, errors } = fieldErrors;

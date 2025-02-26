@@ -1,9 +1,8 @@
 import { ChangeEvent, FocusEvent } from 'react';
 import useFieldHandler from '../hooks/useFieldHandler';
-import { KeyOf } from '../types/Global';
-import { NumericFieldComponent, NumericFieldProps } from '../types/NumericField';
+import { NumericFieldComponent } from '../types/NumericField';
 
-const NumericField: NumericFieldComponent = <K extends KeyOf = KeyOf>({
+const NumericField: NumericFieldComponent = ({
   domRef,
   fieldRef,
   name,
@@ -15,13 +14,8 @@ const NumericField: NumericFieldComponent = <K extends KeyOf = KeyOf>({
   validateOnChange,
   validateOnBlur,
   ...rest
-}: NumericFieldProps<K>) => {
-  const {
-    value = '',
-    isValid,
-    setValue,
-    blur,
-  } = useFieldHandler<K, number>({
+}) => {
+  const { value, isValid, setValue, blur } = useFieldHandler({
     fieldRef,
     name,
     onChange,
@@ -45,7 +39,7 @@ const NumericField: NumericFieldComponent = <K extends KeyOf = KeyOf>({
     <input
       ref={domRef}
       name={name}
-      value={String(value)}
+      value={String(value ?? '')}
       onChange={onChangeHandler}
       onBlur={onBlurHandler}
       aria-invalid={!isValid}

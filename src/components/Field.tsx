@@ -1,13 +1,9 @@
 import FieldContext from '../contexts/FieldContext';
 import useFieldHandler from '../hooks/useFieldHandler';
-import { KeyOf } from '../types/Global';
-import { FieldComponent, FieldProps } from '../types/Field';
+import { FieldComponent } from '../types/Field';
 
-const Field: FieldComponent = <K extends KeyOf = KeyOf, V = any>({
-  component,
-  ...rest
-}: FieldProps<K, V>) => {
-  const fieldContext = useFieldHandler<K, V>(rest);
+const Field: FieldComponent = ({ component, ...rest }) => {
+  const fieldContext = useFieldHandler(rest);
   return (
     <FieldContext.Provider value={fieldContext}>
       {component?.(fieldContext)}

@@ -1,13 +1,8 @@
-import { ChangeEventHandler, FocusEventHandler, useMemo } from 'react';
+import { useMemo, ChangeEventHandler, FocusEventHandler } from 'react';
 import useFieldHandler from '../hooks/useFieldHandler';
-import { KeyOf } from '../types/Global';
-import { SelectComponent, SelectFieldTypes, SelectProps } from '../types/Select';
+import { SelectComponent, SelectFieldTypes } from '../types/Select';
 
-const Select: SelectComponent = <
-  T extends Record<string, any> = Record<string, any>,
-  K extends KeyOf = KeyOf,
-  V extends SelectFieldTypes = SelectFieldTypes,
->({
+const Select: SelectComponent = ({
   domRef,
   fieldRef,
   name,
@@ -20,8 +15,8 @@ const Select: SelectComponent = <
   validateOnChange,
   validateOnBlur,
   ...rest
-}: SelectProps<T, K, V>) => {
-  const { value, isValid, setValue, blur } = useFieldHandler<K, V>({
+}) => {
+  const { value, isValid, setValue, blur } = useFieldHandler({
     fieldRef,
     name,
     onChange,
@@ -34,8 +29,8 @@ const Select: SelectComponent = <
 
   const { optionsMap, optionsArray } = useMemo(() => {
     if (!options) return {};
-    const newOptionsMap = new Map<V | undefined, string>();
-    const newOptionsArray: Array<[V | undefined, string]> = [];
+    const newOptionsMap = new Map();
+    const newOptionsArray: Array<[SelectFieldTypes, string]> = [];
     for (const { value, label } of options) newOptionsMap.set(value, label);
     for (const option of newOptionsMap.entries()) newOptionsArray.push(option);
     return { optionsMap: newOptionsMap, optionsArray: newOptionsArray };

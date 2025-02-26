@@ -1,9 +1,8 @@
 import { ChangeEvent, FocusEvent } from 'react';
 import useFieldHandler from '../hooks/useFieldHandler';
-import { KeyOf } from '../types/Global';
-import { CheckboxComponent, CheckboxProps } from '../types/Checkbox';
+import { CheckboxComponent } from '../types/Checkbox';
 
-const Checkbox: CheckboxComponent = <K extends KeyOf = KeyOf>({
+const Checkbox: CheckboxComponent = ({
   domRef,
   fieldRef,
   name,
@@ -15,13 +14,8 @@ const Checkbox: CheckboxComponent = <K extends KeyOf = KeyOf>({
   validateOnChange,
   validateOnBlur,
   ...rest
-}: CheckboxProps<K>) => {
-  const {
-    value = '',
-    isValid,
-    setValue,
-    blur,
-  } = useFieldHandler<K, boolean>({
+}) => {
+  const { value, isValid, setValue, blur } = useFieldHandler({
     fieldRef,
     name,
     onChange,
@@ -45,7 +39,7 @@ const Checkbox: CheckboxComponent = <K extends KeyOf = KeyOf>({
     <input
       ref={domRef}
       name={name}
-      value={String(value)}
+      checked={Boolean(value)}
       onChange={onChangeHandler}
       onBlur={onBlurHandler}
       aria-invalid={!isValid}

@@ -7,17 +7,19 @@ type HTMLInputProps = DetailedHTMLProps<
   HTMLInputElement
 >;
 
-interface NumericFieldOwnProps<K extends KeyOf> extends FieldHandlerProps<K, number> {
-  type?: 'number' | 'range';
+interface NumericFieldOwnProps<T extends Record<string, any>, K extends KeyOf<T, number>>
+  extends FieldHandlerProps<T, K, number> {
   domRef?: RefObject<HTMLInputElement>;
 }
 
-export interface NumericFieldProps<K extends KeyOf = KeyOf>
-  extends NumericFieldOwnProps<K>,
-    Omit<HTMLInputProps, keyof NumericFieldOwnProps<K> | 'children'> {}
+export interface NumericFieldProps<
+  T extends Record<string, any> = Record<string, any>,
+  K extends KeyOf<T, number> = KeyOf<T, number>,
+> extends NumericFieldOwnProps<T, K>,
+    Omit<HTMLInputProps, keyof NumericFieldOwnProps<T, K> | 'children'> {}
 
 export type NumericFieldComponent<T extends Record<string, any> = Record<string, any>> = <
   K extends KeyOf<T, number> = KeyOf<T, number>,
 >(
-  props: NumericFieldProps<K>,
+  props: NumericFieldProps<T, K>,
 ) => Child;

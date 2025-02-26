@@ -1,9 +1,8 @@
 import { ChangeEvent, FocusEvent } from 'react';
 import useFieldHandler from '../hooks/useFieldHandler';
-import { KeyOf } from '../types/Global';
-import { TextFieldComponent, TextFieldProps } from '../types/TextField';
+import { TextFieldComponent } from '../types/TextField';
 
-const TextField: TextFieldComponent = <K extends KeyOf = KeyOf>({
+const TextField: TextFieldComponent = ({
   domRef,
   fieldRef,
   name,
@@ -15,13 +14,8 @@ const TextField: TextFieldComponent = <K extends KeyOf = KeyOf>({
   validateOnChange,
   validateOnBlur,
   ...rest
-}: TextFieldProps<K>) => {
-  const {
-    value = '',
-    isValid,
-    setValue,
-    blur,
-  } = useFieldHandler<K, string>({
+}) => {
+  const { value, isValid, setValue, blur } = useFieldHandler({
     fieldRef,
     name,
     onChange,
@@ -45,7 +39,7 @@ const TextField: TextFieldComponent = <K extends KeyOf = KeyOf>({
     <input
       ref={domRef}
       name={name}
-      value={String(value)}
+      value={String(value ?? '')}
       onChange={onChangeHandler}
       onBlur={onBlurHandler}
       aria-invalid={!isValid}

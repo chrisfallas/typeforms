@@ -6,14 +6,12 @@ import NumericField from './components/NumericField';
 import Checkbox from './components/Checkbox';
 import Select from './components/Select';
 import Error from './components/Error';
-import { useFormContext } from './contexts/FormContext';
-import { useFieldContext } from './contexts/FieldContext';
-import useFormRef, { FormRefHook } from './hooks/useFormRef';
-import useFieldRef, { FieldRefHook } from './hooks/useFieldRef';
+import { useFormContext, FormContext } from './contexts/FormContext';
+import { useFieldContext, FieldContext } from './contexts/FieldContext';
 import { useFormErrors } from './hooks/useFormErrors';
 import { useFieldErrors } from './hooks/useFieldErrors';
 import { FormComponent, FormProps } from './types/Form';
-import { FieldComponent, FieldProps, FieldComponentProps } from './types/Field';
+import { FieldComponent, FieldProps } from './types/Field';
 import { TextFieldComponent, TextFieldProps } from './types/TextField';
 import { TextAreaComponent, TextAreaProps } from './types/TextArea';
 import { NumericFieldComponent, NumericFieldProps } from './types/NumericField';
@@ -30,8 +28,6 @@ interface TypeForm<T extends Record<string, any> = Record<string, any>> {
   Checkbox: CheckboxComponent<T>;
   Select: SelectComponent<T>;
   Error: ErrorComponent<T>;
-  useFormRef: FormRefHook<T>;
-  useFieldRef: FieldRefHook<T>;
 }
 
 const TypeForm = <T extends Record<string, any>>(): TypeForm<T> => ({
@@ -43,8 +39,6 @@ const TypeForm = <T extends Record<string, any>>(): TypeForm<T> => ({
   Checkbox: Checkbox as TypeForm<T>['Checkbox'],
   Select: Select as TypeForm<T>['Select'],
   Error: Error as TypeForm<T>['Error'],
-  useFormRef: useFormRef as TypeForm<T>['useFormRef'],
-  useFieldRef: useFieldRef as TypeForm<T>['useFieldRef'],
 });
 
 export default TypeForm;
@@ -53,12 +47,13 @@ export { useFormContext, useFieldContext, useFormErrors, useFieldErrors };
 
 export type {
   FormProps,
-  // FieldProps,
-  FieldComponentProps,
-  // TextFieldProps,
-  // TextAreaProps,
-  // NumericFieldProps,
-  // CheckboxProps,
-  // SelectProps,
-  // ErrorProps,
+  FormContext,
+  FieldProps,
+  FieldContext,
+  TextFieldProps,
+  TextAreaProps,
+  NumericFieldProps,
+  CheckboxProps,
+  SelectProps,
+  ErrorProps,
 };

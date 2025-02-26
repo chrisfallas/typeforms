@@ -1,12 +1,11 @@
 import { createContext, useContext } from 'react';
 import { FormHandlerReturn } from '../types/FormHandler';
 
-export type FormContext<T extends Record<string, any> = Record<string, any>> =
-  FormHandlerReturn<T>;
+export type FormContext<T extends Record<string, any>> = FormHandlerReturn<T>;
 
-const FormContext = createContext<FormContext | null>(null);
+const FormContext = createContext<FormContext<Record<string, any>> | null>(null);
 
-export const useFormContext = <T extends Record<string, any> = Record<string, any>>() => {
+export const useFormContext = <T extends Record<string, any>>() => {
   const context = useContext(FormContext);
 
   if (!context) {
