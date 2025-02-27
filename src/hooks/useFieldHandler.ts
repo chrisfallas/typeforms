@@ -35,8 +35,7 @@ const useFieldHandler = <
 
   const validate: FieldHandlerReturn<V>['validate'] = async () => {
     const result = await validationsContext.validate({ keys: [name], event: 'manual' });
-    const { isValid, errors } = readFieldValidationResult(result[name]);
-    return { isValidating: false, isValid, errors };
+    return readFieldValidationResult(result[name]);
   };
 
   const cleanErrors: FieldHandlerReturn<V>['cleanErrors'] = () => {

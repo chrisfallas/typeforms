@@ -23,7 +23,7 @@ export interface FieldHandlerReturn<V = any> {
     value: V | undefined,
     options?: { skipValidation?: boolean },
   ) => Promise<void>;
-  validate: () => Promise<FieldErrors>;
+  validate: () => Promise<Omit<FieldErrors, 'isValidating'>>;
   cleanErrors: () => void;
   blur: () => void;
 }

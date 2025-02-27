@@ -32,7 +32,7 @@ export interface FormHandlerReturn<T extends Record<string, any> = Record<string
   validate: <K extends KeyOf<T> = KeyOf<T>>(options?: {
     keys?: Array<K>;
     skipStateUpdate?: boolean;
-  }) => Promise<FormErrors<T>>;
+  }) => Promise<Omit<FormErrors<T>, 'isValidating'>>;
   cleanErrors: <K extends KeyOf<T> = KeyOf<T>>(keys?: Array<K>) => void;
   submit: (event: FormEvent<HTMLFormElement>) => Promise<void>;
   reset: () => Promise<void>;

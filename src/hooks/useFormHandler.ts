@@ -95,8 +95,7 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
       skipStateUpdate,
       event: 'manual',
     });
-    const { isValid, errors } = readFormValidationResult<T>(result);
-    return { isValidating: false, isValid, errors };
+    return readFormValidationResult<T>(result);
   };
 
   const submit: FormHandlerReturn<T>['submit'] = async (event) => {
