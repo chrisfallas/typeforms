@@ -26,7 +26,7 @@ const useFieldHandler = <
 
   const value = getValue(name);
 
-  const { isValid, errors } = useFieldErrors(name);
+  const { isValidating, isValid, errors } = useFieldErrors(name);
 
   const setOwnValue: FieldHandlerReturn<V>['setValue'] = async (value, options) => {
     await setValue(name, value, { skipValidation: options?.skipValidation });
@@ -35,7 +35,8 @@ const useFieldHandler = <
 
   const validate: FieldHandlerReturn<V>['validate'] = async () => {
     const result = await validationsContext.validate({ keys: [name], event: 'manual' });
-    return readFieldValidationResult(result[name]);
+    const { isValid, errors } = readFieldValidationResult(result[name]);
+    return { isValidating: false, isValid, errors };
   };
 
   const cleanErrors: FieldHandlerReturn<V>['cleanErrors'] = () => {
@@ -66,8 +67,9 @@ const useFieldHandler = <
   const contextValues: FieldHandlerReturn = {
     name,
     value,
-    errors,
+    isValidating,
     isValid,
+    errors,
     setValue: setOwnValue,
     validate,
     cleanErrors,

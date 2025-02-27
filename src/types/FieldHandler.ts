@@ -16,8 +16,9 @@ export interface FieldHandlerProps<
 export interface FieldHandlerReturn<V = any> {
   name: KeyOf;
   value: V | undefined;
-  errors?: FieldErrors['errors'];
+  isValidating: boolean;
   isValid: FieldErrors['isValid'];
+  errors?: FieldErrors['errors'];
   setValue: (
     value: V | undefined,
     options?: { skipValidation?: boolean },

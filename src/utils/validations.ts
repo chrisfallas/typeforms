@@ -8,8 +8,8 @@ import {
 
 export const readFormValidationResult = <T extends Record<string, any>>(
   validationResultMap: ValidationsHandlerReturn<T>['validationResultMap'],
-): FormErrors<T> => {
-  const value: FormErrors<T> = { isValid: true, errors: {} };
+): Omit<FormErrors<T>, 'isValidating'> => {
+  const value: Omit<FormErrors<T>, 'isValidating'> = { isValid: true, errors: {} };
 
   for (const validationResultMapKey in validationResultMap) {
     const key = validationResultMapKey as keyof typeof validationResultMap;
@@ -25,8 +25,8 @@ export const readFormValidationResult = <T extends Record<string, any>>(
 
 export const readFieldValidationResult = (
   validationResult?: ValidationResult,
-): FieldErrors => {
-  const value: FieldErrors = { isValid: true, errors: [] };
+): Omit<FieldErrors, 'isValidating'> => {
+  const value: Omit<FieldErrors, 'isValidating'> = { isValid: true, errors: [] };
 
   if (typeof validationResult === 'string') {
     if (validationResult === '') return value;

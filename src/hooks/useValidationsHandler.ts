@@ -7,6 +7,7 @@ import {
   ValidationsHandlerProps,
   ValidationsHandlerReturn,
   FieldValidationData,
+  ValidationResult,
 } from '../types/Validations';
 
 const useValidationsHandler = <T extends Record<string, any> = Record<string, any>>({
@@ -24,6 +25,10 @@ const useValidationsHandler = <T extends Record<string, any> = Record<string, an
 
   const [validationResultMap, _setValidationResultMap] = useState<
     ValidationsHandlerReturn<T>['validationResultMap']
+  >({});
+
+  const [fieldsBeingValidatedAsync, setFieldsBeingValidatedAsync] = useState<
+    Partial<Record<KeyOf<T>, boolean>>
   >({});
 
   const registerFieldValidationData = (
@@ -79,13 +84,6 @@ const useValidationsHandler = <T extends Record<string, any> = Record<string, an
     return fieldValidationCallbacks;
   };
 
-  const validateField =
-    (key: KeyOf<T>) => async (validation: FieldValidationCallback) => {
-      const value = dataRef.current[key];
-      const result = await validation(value);
-      return [key, result];
-    };
-
   const validate: ValidationsHandlerReturn<T>['validate'] = async (options = {}) => {
     const { keys, skipStateUpdate = false, event = 'manual' } = options;
 
@@ -95,30 +93,55 @@ const useValidationsHandler = <T extends Record<string, any> = Record<string, an
 
     const keysToValidate = keys ?? getAllKeysWithValidation();
 
-    const validationPromises: Array<ReturnType<ReturnType<typeof validateField>>> = [];
+    const validationPromises: Array<Promise<[KeyOf<T>, ValidationResult]>> = [];
+    const validationResults: Array<[KeyOf<T>, ValidationResult]> = [];
+    const newFieldsBeingValidatedAsync: typeof fieldsBeingValidatedAsync = {};
 
     for (const key of keysToValidate) {
       const fieldValidations = getFieldValidations(key, event);
+      if (!fieldValidations.length) continue;
       for (const validation of fieldValidations) {
-        validationPromises.push(validateField(key)(validation));
+        const result = validation(dataRef.current[key]);
+        if (result instanceof Promise) {
+          newFieldsBeingValidatedAsync[key as KeyOf<T>] = true;
+          validationPromises.push(result.then((res) => [key, res]));
+        } else {
+          validationResults.push([key, result]);
+        }
       }
     }
 
-    if (!validationPromises.length) return returnValue;
+    if (event === 'onSubmit' || event === 'manual') {
+      validationResults.push(...(await Promise.all(validationPromises)));
+    } else {
+      setFieldsBeingValidatedAsync((prev) => ({
+        ...prev,
+        ...newFieldsBeingValidatedAsync,
+      }));
+      for (const promise of validationPromises) {
+        promise.then(([key, result]) => {
+          const { isValid, errors } = readFieldValidationResult(result);
+          const newState: State = { [key]: errors?.length ? errors : isValid };
+          setValidationResultMap(newState);
+          setFieldsBeingValidatedAsync((prev) => ({ ...prev, [key]: false }));
+        });
+      }
+    }
 
-    const validationResults = await Promise.all(validationPromises);
+    if (!validationResults.length) return returnValue;
 
-    for (const [key, result] of validationResults) {
-      if (returnValue[key as KeyOf<T>] === undefined) {
-        returnValue[key as KeyOf<T>] = result;
+    for (const [validationResultsKey, result] of validationResults) {
+      const key = validationResultsKey as KeyOf<T>;
+      if (returnValue[key] === undefined) {
+        returnValue[key] = result;
       } else {
-        const existingResult = readFieldValidationResult(returnValue[key as KeyOf<T>]);
+        const existingResult = readFieldValidationResult(returnValue[key]);
         const newResult = readFieldValidationResult(result);
         const { isValid: existingIsValid, errors: existingErrors } = existingResult;
         const { isValid: newIsValid, errors: newErrors } = newResult;
-        returnValue[key as KeyOf<T>] = newIsValid && existingIsValid;
+        returnValue[key] = newIsValid && existingIsValid;
         const allErrors = [...existingErrors, ...newErrors];
-        if (allErrors.length) returnValue[key as KeyOf<T>] = allErrors;
+        if (allErrors.length) returnValue[key] = allErrors;
       }
     }
 
@@ -143,6 +166,7 @@ const useValidationsHandler = <T extends Record<string, any> = Record<string, an
   return {
     dataRef,
     validationResultMap,
+    fieldsBeingValidatedAsync,
     registerFieldValidationData,
     validate,
     cleanErrors,

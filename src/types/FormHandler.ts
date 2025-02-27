@@ -15,9 +15,10 @@ export interface FormHandlerProps<T extends Record<string, any> = Record<string,
 
 export interface FormHandlerReturn<T extends Record<string, any> = Record<string, any>> {
   data: Partial<T>;
-  errors: FormErrors<T>['errors'];
-  isValid: FormErrors<T>['isValid'];
   isDirty: boolean;
+  isValidating: boolean;
+  isValid: FormErrors<T>['isValid'];
+  errors: FormErrors<T>['errors'];
   isSubmitting: boolean;
   getValue: <K extends KeyOf<T>>(name: K) => T[K] | undefined;
   setValue: <K extends KeyOf<T>>(

@@ -12,7 +12,8 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
   const [data, _setData] = useState<FormHandlerReturn<T>['data']>(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { dataRef, validationResultMap, cleanErrors } = validationsContext;
+  const { dataRef, validationResultMap, fieldsBeingValidatedAsync, cleanErrors } =
+    validationsContext;
 
   dataRef.current = data;
 
@@ -21,6 +22,13 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
     const stringifiedData = JSON.stringify(data);
     return stringifiedInitialValues !== stringifiedData;
   }, [initialValues, data]);
+
+  const isValidating = useMemo(() => {
+    for (const key in fieldsBeingValidatedAsync) {
+      if (fieldsBeingValidatedAsync[key as KeyOf<T>]) return true;
+    }
+    return false;
+  }, [fieldsBeingValidatedAsync]);
 
   const { isValid, errors } = useMemo(
     () => readFormValidationResult(validationResultMap),
@@ -87,7 +95,8 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
       skipStateUpdate,
       event: 'manual',
     });
-    return readFormValidationResult<T>(result);
+    const { isValid, errors } = readFormValidationResult<T>(result);
+    return { isValidating: false, isValid, errors };
   };
 
   const submit: FormHandlerReturn<T>['submit'] = async (event) => {
@@ -114,9 +123,10 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
 
   const formHandler: FormHandlerReturn<T> = {
     data,
-    errors,
-    isValid,
     isDirty,
+    isValid,
+    isValidating,
+    errors,
     isSubmitting,
     getValue,
     setValue,

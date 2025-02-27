@@ -12,6 +12,7 @@ export interface ValidationsHandlerReturn<
 > {
   dataRef: MutableRefObject<Partial<T>>;
   validationResultMap: Partial<Record<KeyOf<T>, ValidationResult>>;
+  fieldsBeingValidatedAsync: Partial<Record<KeyOf<T>, boolean>>;
   registerFieldValidationData: <K extends KeyOf<T>>(
     key: K,
     validationData: FieldValidationData<T[K]>,
@@ -59,10 +60,12 @@ export interface ValidationEventFlags {
 
 export interface FieldErrors {
   isValid: boolean;
+  isValidating: boolean;
   errors: Array<string>;
 }
 
 export interface FormErrors<T extends Record<string, any> = Record<string, any>> {
   isValid: boolean;
+  isValidating: boolean;
   errors: Partial<Record<KeyOf<T>, Array<string>>>;
 }
