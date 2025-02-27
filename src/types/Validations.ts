@@ -12,7 +12,7 @@ export interface ValidationsHandlerReturn<
 > {
   dataRef: MutableRefObject<Partial<T>>;
   validationResultMap: Partial<Record<KeyOf<T>, ValidationResult>>;
-  fieldsBeingValidatedAsync: Partial<Record<KeyOf<T>, boolean>>;
+  fieldsBeingValidated: Partial<Record<KeyOf<T>, boolean>>;
   registerFieldValidationData: <K extends KeyOf<T>>(
     key: K,
     validationData: FieldValidationData<T[K]>,

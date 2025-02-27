@@ -7,7 +7,7 @@ import { FieldErrors } from '../types/Validations';
 export const useFieldErrors = <T extends Record<string, any> = Record<string, any>>(
   key: KeyOf<T>,
 ): FieldErrors => {
-  const { validationResultMap, fieldsBeingValidatedAsync } = useValidationsContext();
+  const { validationResultMap, fieldsBeingValidated } = useValidationsContext();
 
   const { isValid, errors } = useMemo(
     () => readFieldValidationResult(validationResultMap[key]),
@@ -15,8 +15,8 @@ export const useFieldErrors = <T extends Record<string, any> = Record<string, an
   );
 
   const isValidating = useMemo(() => {
-    return fieldsBeingValidatedAsync[key] ?? false;
-  }, [fieldsBeingValidatedAsync[key]]);
+    return fieldsBeingValidated[key] ?? false;
+  }, [fieldsBeingValidated[key]]);
 
   return { isValid, isValidating, errors };
 };

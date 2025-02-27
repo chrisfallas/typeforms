@@ -12,7 +12,7 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
   const [data, _setData] = useState<FormHandlerReturn<T>['data']>(initialValues);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { dataRef, validationResultMap, fieldsBeingValidatedAsync, cleanErrors } =
+  const { dataRef, validationResultMap, fieldsBeingValidated, cleanErrors } =
     validationsContext;
 
   dataRef.current = data;
@@ -24,11 +24,11 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
   }, [initialValues, data]);
 
   const isValidating = useMemo(() => {
-    for (const key in fieldsBeingValidatedAsync) {
-      if (fieldsBeingValidatedAsync[key as KeyOf<T>]) return true;
+    for (const key in fieldsBeingValidated) {
+      if (fieldsBeingValidated[key as KeyOf<T>]) return true;
     }
     return false;
-  }, [fieldsBeingValidatedAsync]);
+  }, [fieldsBeingValidated]);
 
   const { isValid, errors } = useMemo(
     () => readFormValidationResult(validationResultMap),
@@ -102,14 +102,16 @@ const useFormHandler = <T extends Record<string, any> = Record<string, any>>(
   const submit: FormHandlerReturn<T>['submit'] = async (event) => {
     event?.preventDefault();
     setIsSubmitting(true);
-    try {
-      const result = await validationsContext.validate({ event: 'onSubmit' });
-      const { isValid, errors } = readFormValidationResult(result);
-      if (isValid) await onSubmit?.({ ok: true, data: data as T });
-      else await onSubmit?.({ ok: false, errors });
-    } finally {
-      setIsSubmitting(false);
-    }
+    new Promise(async () => {
+      try {
+        const result = await validationsContext.validate({ event: 'onSubmit' });
+        const { isValid, errors } = readFormValidationResult(result);
+        if (isValid) await onSubmit?.({ ok: true, data: data as T });
+        else await onSubmit?.({ ok: false, errors });
+      } finally {
+        setIsSubmitting(false);
+      }
+    });
   };
 
   const reset: FormHandlerReturn<T>['reset'] = async () => {
