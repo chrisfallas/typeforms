@@ -1,4 +1,4 @@
-# React TypeForms
+# TypeForms
 
 Build type-safe React forms, keeping your code clean
 
@@ -62,10 +62,10 @@ const MyForm = () => {
   };
 
   return (
-    <Form validations={validations} onSubmit={onSubmitHandler} validateOnChange={false}>
+    <Form validations={validations} onSubmit={onSubmitHandler}>
       <TextField name="name" />
       <Error htmlFor="name" />
-      <TextField name="email" />
+      <TextField name="email" validateOnChange={false} />
       <Error htmlFor="email" />
       <TextField name="password" />
       <Error htmlFor="password" />
