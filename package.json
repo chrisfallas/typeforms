@@ -6,7 +6,7 @@
   "author": "chrisfallas",
   "repository": {
     "type": "git",
-    "url": "https://github.com/chrisfallas/typeforms"
+    "url": "git+https://github.com/chrisfallas/typeforms.git"
   },
   "keywords": [
     "react",
@@ -52,6 +52,7 @@
     "postinstall": "node -e \"try {require('husky').install('./.husky');} catch (e) {}\"",
     "build": "BUILD_TYPE=PROD node esbuild.mjs",
     "dev": "BUILD_TYPE=DEV node esbuild.mjs",
-    "prettier": "prettier --write \"src/**/*.+(ts|tsx|js|jsx|json|css|scss|saas|html|md)\""
+    "prettier": "prettier --write \"src/**/*.+(ts|tsx|js|jsx|json|css|scss|saas|html|md)\"",
+    "prepublishOnly": "npm run build"
   }
 }
