@@ -1,16 +1,13 @@
 {
   "name": "typeforms",
+  "description": "Build type-safe React forms, keeping your code clean",
   "version": "0.1.0",
+  "license": "MIT",
   "author": "chrisfallas",
   "repository": {
     "type": "git",
     "url": "https://github.com/chrisfallas/typeforms"
   },
-  "maintainers": [
-    "chrisfallas <chrisfallas.git@gmail.com>"
-  ],
-  "description": "Build type-safe React forms, keeping your code clean",
-  "type": "module",
   "keywords": [
     "react",
     "typescript",
@@ -19,19 +16,20 @@
     "type",
     "safe",
     "state",
-    "manager",
+    "management",
     "validations"
   ],
-  "license": "MIT",
   "files": [
     "dist"
   ],
-  "main": "dist/index.js",
+  "type": "module",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "peerDependencies": {
