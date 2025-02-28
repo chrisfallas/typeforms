@@ -9,19 +9,26 @@ const isProd = process.env.BUILD_TYPE?.toUpperCase?.() === 'PROD';
 const dirname = new URL('.', import.meta.url).pathname;
 const outdir = isProd ? 'dist' : 'local-package/dist';
 
-const buildOptions = {
+const esmBuildOptions = {
   entryPoints: ['src/index.ts'],
   bundle: true,
   minify: isProd,
   sourcemap: false,
   platform: 'node',
   format: 'esm',
+  outExtension: { '.js': '.mjs' },
   outdir,
   drop: isProd ? ['debugger'] : undefined,
   legalComments: !isProd ? 'none' : undefined,
   jsx: 'transform',
   external: ['react', 'react-dom'],
   plugins: [],
+};
+
+const cjsBuildOptions = {
+  ...esmBuildOptions,
+  format: 'cjs',
+  outExtension: { '.js': '.cjs' },
 };
 
 const typescriptOptions = {
@@ -87,7 +94,8 @@ if (isProd) {
     console.time('⚡ Bundle build complete');
     console.time('☠️  Bundle build failed');
     compileTypescript(['src/index.ts'], typescriptOptions);
-    await esbuild.build(buildOptions);
+    await esbuild.build(esmBuildOptions);
+    await esbuild.build(cjsBuildOptions);
     console.timeEnd('⚡ Bundle build complete');
   } catch (error) {
     console.log(`${error.message}\n`);
@@ -95,7 +103,7 @@ if (isProd) {
   }
 } else {
   prepareLocalPackage();
-  buildOptions.plugins.push({
+  esmBuildOptions.plugins.push({
     name: 'BuildWatchLogs',
     setup(build) {
       let isSuccessfulBuild = false;
@@ -117,6 +125,6 @@ if (isProd) {
       });
     },
   });
-  const buildContext = await esbuild.context(buildOptions);
+  const buildContext = await esbuild.context(esmBuildOptions);
   await buildContext.watch();
 }

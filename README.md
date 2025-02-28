@@ -1,6 +1,6 @@
 # TypeForms
 
-Build type-safe React forms, keeping your code clean
+Build type-safe React forms, keeping your code clean.
 
 ## Basic Implementation
 
