@@ -16,9 +16,21 @@ export default defineConfig({
 			sidebar: [
 				{ label: 'Introduction', link: '/' },
 				{
-					label: 'Overview',
+					label: 'Getting Started',
 					autogenerate: { directory: 'overview' },
 				},
+        {
+          label: 'Components',
+          autogenerate: { directory: 'components' },
+        },
+        {
+          label: 'Hooks',
+          autogenerate: { directory: 'hooks' },
+        },
+        // {
+        //   label: 'Exported Types',
+        //   autogenerate: { directory: 'types' },
+        // },
 			],
 			customCss: ['./src/styles/custom.css'],
 		}),

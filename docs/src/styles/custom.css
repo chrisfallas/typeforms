@@ -1,3 +1,11 @@
-main > div.content-panel:first-child { 
+:root {
+  --sl-content-width: 50rem;
+}
+
+main > div.content-panel:first-child {
   display: none;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
