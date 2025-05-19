@@ -6,9 +6,7 @@ sidebar:
 
 # Text Area
 
-TextArea is a controlled multi-line text input mapped to a string field in your form model.
-Like TextField, it maintains tight type bindings and full integration with the form state, while exposing a native HTML `<textarea>` interface.
-It's functionally identical in terms of validation and updates, but tailored for longer input use cases.
+TextArea renders a multi-line text input (`<textarea>`) bound to a string field in your schema.
 
 ## Props
 
@@ -18,7 +16,7 @@ The `TextArea` component extends `TextareaHTMLAttributes` inheriting all related
 |-------------------------------------------------------------------------------------------|----------------------------------------|------------------------------------|-----------------------------------------|
 | <b>name</b><br/>The name of the field in the form schema that the input will be bound to. | <span class="nowrap">`string`</span>   | <span class="nowrap">`true`</span> | <span class="nowrap">`undefined`</span> |
 | <b>onChange</b><br/>Callback function that is called when the field value changes.        | <span class="nowrap">`function`</span> | <span class="nowrap">`false`</span> | <span class="nowrap">`undefined`</span> |
-| <b>validation</b><br/>Validation rules for the field.                                     | <span class="nowrap">`object`</span>   | <span class="nowrap">`false`</span> | <span class="nowrap">`undefined`</span> |
+| <b>validation</b><br/>Validation rules for the field.                                     | <span class="nowrap">`function`</span>   | <span class="nowrap">`false`</span> | <span class="nowrap">`undefined`</span> |
 | <b>validateOnMount</b><br/>Boolean indicating whether to validate the field on mount.     | <span class="nowrap">`boolean`</span>  | <span class="nowrap">`false`</span> | <span class="nowrap">`false`</span> |
 | <b>validateOnSubmit</b><br/>Boolean indicating whether to validate the field on submit.   | <span class="nowrap">`boolean`</span>  | <span class="nowrap">`false`</span> | <span class="nowrap">`true`</span> |
 | <b>validateOnChange</b><br/>Boolean indicating whether to validate the field on change.   | <span class="nowrap">`boolean`</span>  | <span class="nowrap">`false`</span> | <span class="nowrap">`true`</span> |

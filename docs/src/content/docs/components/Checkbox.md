@@ -6,9 +6,8 @@ sidebar:
 
 # Checkbox
 
-Checkbox renders a boolean input (`<input type="checkbox">`) and binds it to a boolean field in your schema.
+Checkbox renders a boolean input (`<input type="checkbox">`) abound to a boolean field in your schema.
 It manages indeterminate states internally and ensures that the resulting value is always a proper boolean.
-It’s type-safe, form-aware, and compatible with both controlled and native behaviors like browser autofill and keyboard navigation.
 
 ## Props
 
@@ -18,7 +17,7 @@ The `Checkbox` component extends `InputHTMLAttributes` inheriting all related pr
 |-------------------------------------------------------------------------------------------|----------------------------------------|------------------------------------|-----------------------------------------|
 | <b>name</b><br/>The name of the field in the form schema that the input will be bound to. | <span class="nowrap">`string`</span>   | <span class="nowrap">`true`</span> | <span class="nowrap">`undefined`</span> |
 | <b>onChange</b><br/>Callback function that is called when the field value changes.        | <span class="nowrap">`function`</span> | <span class="nowrap">`false`</span> | <span class="nowrap">`undefined`</span> |
-| <b>validation</b><br/>Validation rules for the field.                                     | <span class="nowrap">`object`</span>   | <span class="nowrap">`false`</span> | <span class="nowrap">`undefined`</span> |
+| <b>validation</b><br/>Validation rules for the field.                                     | <span class="nowrap">`function`</span>   | <span class="nowrap">`false`</span> | <span class="nowrap">`undefined`</span> |
 | <b>validateOnMount</b><br/>Boolean indicating whether to validate the field on mount.     | <span class="nowrap">`boolean`</span>  | <span class="nowrap">`false`</span> | <span class="nowrap">`false`</span> |
 | <b>validateOnSubmit</b><br/>Boolean indicating whether to validate the field on submit.   | <span class="nowrap">`boolean`</span>  | <span class="nowrap">`false`</span> | <span class="nowrap">`true`</span> |
 | <b>validateOnChange</b><br/>Boolean indicating whether to validate the field on change.   | <span class="nowrap">`boolean`</span>  | <span class="nowrap">`false`</span> | <span class="nowrap">`true`</span> |

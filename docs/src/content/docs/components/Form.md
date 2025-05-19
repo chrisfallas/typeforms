@@ -6,9 +6,9 @@ sidebar:
 
 # Form
 
-The Form component provides the core infrastructure for building a typed form. It wires up field registration, validation, and submission handling,
-all while ensuring type fidelity with your model. Every field inside the form is automatically tracked, and the data returned on submit conforms precisely to your schema.
-It also supports native form behaviors like reset and browser-level validation fallbacks where needed.
+The Form component provides the core infrastructure for building a typed form. Internally, it's a context provider that encapsulates
+all the logic related to field registration, validation, and submission handling, providing its form elements with
+everything they need to interact with the form context.
 
 ## Props
 
