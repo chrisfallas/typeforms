@@ -1,5 +1,5 @@
-import { Child, KeyOf } from './Global';
 import { DetailedHTMLProps, InputHTMLAttributes, RefObject } from 'react';
+import { Child, KeyOf } from './Global';
 import { FieldHandlerProps } from './FieldHandler';
 
 type HTMLInputProps = DetailedHTMLProps<
@@ -26,3 +26,13 @@ export type CheckboxComponent<T extends Record<string, any> = Record<string, any
 >(
   props: CheckboxProps<T, K>,
 ) => Child;
+
+interface CustomCheckboxOwnProps {
+  domRef?: RefObject<HTMLInputElement>;
+  value?: boolean;
+  fieldContext: FieldHandlerProps<Record<string, any>, string, boolean>;
+}
+
+export interface CustomCheckboxProps
+  extends CustomCheckboxOwnProps,
+    Omit<HTMLInputProps, keyof CustomCheckboxOwnProps | BannedHTMLInputProps> {}

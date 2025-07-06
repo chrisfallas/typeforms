@@ -3,10 +3,10 @@ import useFieldHandler from '../hooks/useFieldHandler';
 import { FieldComponent } from '../types/Field';
 
 const Field: FieldComponent = ({ component, ...rest }) => {
-  const fieldContext = useFieldHandler(rest);
+  const fieldHandler = useFieldHandler(rest);
   return (
-    <FieldContext.Provider value={fieldContext}>
-      {component?.(fieldContext)}
+    <FieldContext.Provider value={fieldHandler}>
+      {component?.(fieldHandler)}
     </FieldContext.Provider>
   );
 };

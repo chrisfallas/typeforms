@@ -1,4 +1,5 @@
-import { ChangeEvent, FocusEvent, useMemo } from 'react';
+import { ChangeEvent, createElement, FocusEvent, useMemo } from 'react';
+import { useSettingsContext } from '../contexts/SettingsContext';
 import useFieldHandler from '../hooks/useFieldHandler';
 import { NumericFieldComponent } from '../types/NumericField';
 
@@ -15,10 +16,9 @@ const NumericField: NumericFieldComponent = ({
   validateOnBlur,
   ...rest
 }) => {
-  const { value, isValid, setValue, blur } = useFieldHandler({
+  const fieldHandler = useFieldHandler({
     fieldRef,
     name,
-    onChange,
     validation,
     validateOnMount,
     validateOnSubmit,
@@ -26,19 +26,33 @@ const NumericField: NumericFieldComponent = ({
     validateOnBlur,
   });
 
+  const { value, isValid, setValue, blur } = fieldHandler;
+
+  const settings = useSettingsContext();
+
   const checked = useMemo(() => {
     if (rest.type !== 'radio') return undefined;
     return value === rest.value;
   }, [value, rest.value]);
 
-  const onChangeHandler = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    setValue(+target.value);
+  const onChangeHandler = async (event: ChangeEvent<HTMLInputElement>) => {
+    await setValue(+event.target.value);
+    onChange?.(event);
   };
 
   const onBlurHandler = (event: FocusEvent<HTMLInputElement>) => {
     blur();
     onBlur?.(event);
   };
+
+  if (settings?.customNumericField) {
+    return createElement(settings.customNumericField, {
+      domRef,
+      fieldContext: fieldHandler,
+      checked,
+      ...rest,
+    });
+  }
 
   return (
     <input

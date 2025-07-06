@@ -1,4 +1,5 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, createElement, FocusEvent } from 'react';
+import { useSettingsContext } from '../contexts/SettingsContext';
 import useFieldHandler from '../hooks/useFieldHandler';
 import { CheckboxComponent } from '../types/Checkbox';
 
@@ -15,10 +16,9 @@ const Checkbox: CheckboxComponent = ({
   validateOnBlur,
   ...rest
 }) => {
-  const { value, isValid, setValue, blur } = useFieldHandler({
+  const fieldHandler = useFieldHandler({
     fieldRef,
     name,
-    onChange,
     validation,
     validateOnMount,
     validateOnSubmit,
@@ -26,14 +26,27 @@ const Checkbox: CheckboxComponent = ({
     validateOnBlur,
   });
 
-  const onChangeHandler = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    setValue(target.checked);
+  const { value, isValid, setValue, blur } = fieldHandler;
+
+  const settings = useSettingsContext();
+
+  const onChangeHandler = async (event: ChangeEvent<HTMLInputElement>) => {
+    await setValue(event.target.checked);
+    onChange?.(event);
   };
 
   const onBlurHandler = (event: FocusEvent<HTMLInputElement>) => {
     blur();
     onBlur?.(event);
   };
+
+  if (settings?.customCheckbox) {
+    return createElement(settings.customCheckbox, {
+      domRef,
+      fieldContext: fieldHandler,
+      ...rest,
+    });
+  }
 
   return (
     <input
