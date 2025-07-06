@@ -13,7 +13,6 @@ const useFieldHandler = <
 >({
   fieldRef,
   name,
-  onChange,
   validation,
   validateOnMount,
   validateOnSubmit,
@@ -30,7 +29,6 @@ const useFieldHandler = <
 
   const setOwnValue: FieldHandlerReturn<V>['setValue'] = async (value, options) => {
     await setValue(name, value, { skipValidation: options?.skipValidation });
-    onChange?.(value);
   };
 
   const validate: FieldHandlerReturn<V>['validate'] = async () => {

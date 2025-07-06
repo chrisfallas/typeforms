@@ -1,3 +1,4 @@
+import TypeFormSettingsProvider from './components/SettingsProvider';
 import Form from './components/Form';
 import Field from './components/Field';
 import TextField from './components/TextField';
@@ -12,12 +13,21 @@ import { useFormErrors } from './hooks/useFormErrors';
 import { useFieldErrors } from './hooks/useFieldErrors';
 import { FormComponent, FormProps } from './types/Form';
 import { FieldComponent, FieldProps } from './types/Field';
-import { TextFieldComponent, TextFieldProps } from './types/TextField';
-import { TextAreaComponent, TextAreaProps } from './types/TextArea';
-import { NumericFieldComponent, NumericFieldProps } from './types/NumericField';
-import { CheckboxComponent, CheckboxProps } from './types/Checkbox';
-import { SelectComponent, SelectProps } from './types/Select';
+import {
+  TextFieldComponent,
+  TextFieldProps,
+  CustomTextFieldProps,
+} from './types/TextField';
+import { TextAreaComponent, TextAreaProps, CustomTextAreaProps } from './types/TextArea';
+import {
+  NumericFieldComponent,
+  NumericFieldProps,
+  CustomNumericFieldProps,
+} from './types/NumericField';
+import { CheckboxComponent, CheckboxProps, CustomCheckboxProps } from './types/Checkbox';
+import { SelectComponent, SelectProps, CustomSelectProps } from './types/Select';
 import { ErrorComponent, ErrorProps } from './types/Error';
+import { TypeFormsSettings } from './types/Settings';
 
 interface TypeForm<T extends Record<string, any> = Record<string, any>> {
   Form: FormComponent<T>;
@@ -43,17 +53,29 @@ const TypeForm = <T extends Record<string, any>>(): TypeForm<T> => ({
 
 export default TypeForm;
 
-export { useFormContext, useFieldContext, useFormErrors, useFieldErrors };
+export {
+  TypeFormSettingsProvider,
+  useFormContext,
+  useFieldContext,
+  useFormErrors,
+  useFieldErrors,
+};
 
 export type {
+  TypeFormsSettings,
   FormProps,
   FormContext,
   FieldProps,
   FieldContext,
   TextFieldProps,
+  CustomTextFieldProps,
   TextAreaProps,
+  CustomTextAreaProps,
   NumericFieldProps,
+  CustomNumericFieldProps,
   CheckboxProps,
+  CustomCheckboxProps,
   SelectProps,
+  CustomSelectProps,
   ErrorProps,
 };

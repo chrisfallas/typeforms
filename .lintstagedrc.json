@@ -1,5 +1,6 @@
 {
   "src/**/*.+(ts|tsx|js|jsx|json|css|scss|saas|html|md)": [
-    "prettier --write"
+    "prettier --write",
+    "git add"
   ]
 }

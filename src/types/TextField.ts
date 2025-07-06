@@ -1,6 +1,6 @@
 import { DetailedHTMLProps, InputHTMLAttributes, RefObject } from 'react';
 import { Child, KeyOf } from './Global';
-import { FieldHandlerProps } from './FieldHandler';
+import { FieldHandlerProps, FieldHandlerReturn } from './FieldHandler';
 
 type HTMLInputProps = DetailedHTMLProps<
   InputHTMLAttributes<HTMLInputElement>,
@@ -26,3 +26,13 @@ export type TextFieldComponent<T extends Record<string, any> = Record<string, an
 >(
   props: TextFieldProps<T, K>,
 ) => Child;
+
+interface CustomTextFieldOwnProps {
+  domRef?: RefObject<HTMLInputElement>;
+  value?: string;
+  fieldContext: FieldHandlerReturn<string>;
+}
+
+export interface CustomTextFieldProps
+  extends CustomTextFieldOwnProps,
+    Omit<HTMLInputProps, keyof CustomTextFieldOwnProps | BannedHTMLInputProps> {}
