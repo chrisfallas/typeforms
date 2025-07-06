@@ -1,6 +1,6 @@
 import { DetailedHTMLProps, TextareaHTMLAttributes, RefObject } from 'react';
 import { Child, KeyOf } from './Global';
-import { FieldHandlerProps } from './FieldHandler';
+import { FieldHandlerProps, FieldHandlerReturn } from './FieldHandler';
 
 type HTMLTextAreaProps = DetailedHTMLProps<
   TextareaHTMLAttributes<HTMLTextAreaElement>,
@@ -12,6 +12,7 @@ type BannedHTMLTextAreaProps = 'children' | 'defaultValue';
 interface TextAreaOwnProps<T extends Record<string, any>, K extends KeyOf<T, string>>
   extends FieldHandlerProps<T, K, string> {
   domRef?: RefObject<HTMLTextAreaElement>;
+  value?: T[K];
 }
 
 export interface TextAreaProps<
@@ -25,3 +26,13 @@ export type TextAreaComponent<T extends Record<string, any> = Record<string, any
 >(
   props: TextAreaProps<T, K>,
 ) => Child;
+
+interface CustomTextAreaOwnProps {
+  domRef?: RefObject<HTMLTextAreaElement>;
+  value?: string;
+  fieldContext: FieldHandlerReturn<string>;
+}
+
+export interface CustomTextAreaProps
+  extends CustomTextAreaOwnProps,
+    Omit<HTMLTextAreaProps, keyof CustomTextAreaOwnProps | BannedHTMLTextAreaProps> {}

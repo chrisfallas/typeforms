@@ -1,6 +1,6 @@
 import { DetailedHTMLProps, SelectHTMLAttributes, RefObject } from 'react';
 import { Child, KeyOf } from './Global';
-import { FieldHandlerProps } from './FieldHandler';
+import { FieldHandlerProps, FieldHandlerReturn } from './FieldHandler';
 
 type HTMLSelectProps = DetailedHTMLProps<
   SelectHTMLAttributes<HTMLSelectElement>,
@@ -16,6 +16,7 @@ interface SelectOwnProps<
 > extends FieldHandlerProps<T, K, V> {
   domRef?: RefObject<HTMLSelectElement>;
   options?: SelectOptions<T[K]>;
+  value?: T[K];
 }
 
 export interface SelectProps<
@@ -38,3 +39,14 @@ export type SelectOptions<V extends SelectFieldTypes = SelectFieldTypes> = Array
 }>;
 
 export type SelectFieldTypes = string | number;
+
+interface CustomSelectOwnProps {
+  domRef?: RefObject<HTMLSelectElement>;
+  options?: SelectOptions;
+  value?: SelectFieldTypes;
+  fieldContext: FieldHandlerReturn<SelectFieldTypes>;
+}
+
+export interface CustomSelectProps
+  extends CustomSelectOwnProps,
+    Omit<HTMLSelectProps, keyof CustomSelectOwnProps | BannedHTMLSelectProps> {}

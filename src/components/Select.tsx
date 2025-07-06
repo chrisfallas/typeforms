@@ -1,5 +1,7 @@
-import { useMemo, ChangeEventHandler, FocusEventHandler } from 'react';
+import { useMemo, ChangeEventHandler, FocusEventHandler, createElement } from 'react';
+import { useSettingsContext } from '../contexts/SettingsContext';
 import useFieldHandler from '../hooks/useFieldHandler';
+import { FieldHandlerReturn } from '../types/FieldHandler';
 import { SelectComponent, SelectFieldTypes } from '../types/Select';
 
 const Select: SelectComponent = ({
@@ -16,16 +18,19 @@ const Select: SelectComponent = ({
   validateOnBlur,
   ...rest
 }) => {
-  const { value, isValid, setValue, blur } = useFieldHandler({
+  const fieldHandler = useFieldHandler({
     fieldRef,
     name,
-    onChange,
     validation,
     validateOnMount,
     validateOnSubmit,
     validateOnChange,
     validateOnBlur,
   });
+
+  const { value, isValid, setValue, blur } = fieldHandler;
+
+  const settings = useSettingsContext();
 
   const { optionsMap, optionsArray } = useMemo(() => {
     if (!options) return {};
@@ -36,12 +41,13 @@ const Select: SelectComponent = ({
     return { optionsMap: newOptionsMap, optionsArray: newOptionsArray };
   }, [options]);
 
-  const onChangeHandler: ChangeEventHandler<HTMLSelectElement> = ({ target }) => {
+  const onChangeHandler: ChangeEventHandler<HTMLSelectElement> = async (event) => {
     if (!optionsMap) return;
     for (const [value] of optionsMap.entries()) {
-      const areBothThePlaceholderOption = value === undefined && target.value === '';
-      if (areBothThePlaceholderOption || String(value) === target.value) {
-        setValue(value);
+      const areBothThePlaceholder = value === undefined && event.target.value === '';
+      if (areBothThePlaceholder || String(value) === event.target.value) {
+        await setValue(value);
+        onChange?.(event);
         break;
       }
     }
@@ -51,6 +57,15 @@ const Select: SelectComponent = ({
     blur();
     onBlur?.(event);
   };
+
+  if (settings?.customSelect) {
+    return createElement(settings.customSelect, {
+      domRef,
+      fieldContext: fieldHandler as FieldHandlerReturn,
+      options,
+      ...rest,
+    });
+  }
 
   return (
     <select

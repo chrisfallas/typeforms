@@ -10,7 +10,6 @@ export interface FieldHandlerProps<
 > extends FieldValidationData<V> {
   fieldRef?: RefObject<FieldContext<T[K]>>;
   name: K;
-  onChange?: (value: V | undefined) => Promise<any> | any;
 }
 
 export interface FieldHandlerReturn<V = any> {

@@ -1,6 +1,6 @@
-import { Child, KeyOf } from './Global';
 import { DetailedHTMLProps, InputHTMLAttributes, RefObject } from 'react';
-import { FieldHandlerProps } from './FieldHandler';
+import { Child, KeyOf } from './Global';
+import { FieldHandlerProps, FieldHandlerReturn } from './FieldHandler';
 
 type HTMLInputProps = DetailedHTMLProps<
   InputHTMLAttributes<HTMLInputElement>,
@@ -27,3 +27,13 @@ export type NumericFieldComponent<T extends Record<string, any> = Record<string,
 >(
   props: NumericFieldProps<T, K>,
 ) => Child;
+
+interface CustomNumericFieldOwnProps {
+  domRef?: RefObject<HTMLInputElement>;
+  value?: number;
+  fieldContext: FieldHandlerReturn<number>;
+}
+
+export interface CustomNumericFieldProps
+  extends CustomNumericFieldOwnProps,
+    Omit<HTMLInputProps, keyof CustomNumericFieldOwnProps | BannedHTMLInputProps> {}

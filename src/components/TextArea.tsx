@@ -1,4 +1,5 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, createElement, FocusEvent } from 'react';
+import { useSettingsContext } from '../contexts/SettingsContext';
 import useFieldHandler from '../hooks/useFieldHandler';
 import { TextAreaComponent } from '../types/TextArea';
 
@@ -15,10 +16,9 @@ const TextArea: TextAreaComponent = ({
   validateOnBlur,
   ...rest
 }) => {
-  const { value, isValid, setValue, blur } = useFieldHandler({
+  const fieldHandler = useFieldHandler({
     fieldRef,
     name,
-    onChange,
     validation,
     validateOnMount,
     validateOnSubmit,
@@ -26,14 +26,27 @@ const TextArea: TextAreaComponent = ({
     validateOnBlur,
   });
 
-  const onChangeHandler = ({ target }: ChangeEvent<HTMLTextAreaElement>) => {
-    setValue(target.value);
+  const { value, isValid, setValue, blur } = fieldHandler;
+
+  const settings = useSettingsContext();
+
+  const onChangeHandler = async (event: ChangeEvent<HTMLTextAreaElement>) => {
+    await setValue(event.target.value);
+    onChange?.(event);
   };
 
   const onBlurHandler = (event: FocusEvent<HTMLTextAreaElement>) => {
     blur();
     onBlur?.(event);
   };
+
+  if (settings?.customTextArea) {
+    return createElement(settings.customTextArea, {
+      domRef,
+      fieldContext: fieldHandler,
+      ...rest,
+    });
+  }
 
   return (
     <textarea
