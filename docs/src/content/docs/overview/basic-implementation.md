@@ -1,5 +1,7 @@
 ---
 title: Basic Implementation
+sidebar:
+  order: 1
 ---
 
 # Basic Implementation

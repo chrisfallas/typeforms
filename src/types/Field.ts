@@ -17,3 +17,5 @@ export type FieldComponent<T extends Record<string, any> = Record<string, any>> 
 >(
   props: PropsWithChildren<FieldProps<T, K, V>>,
 ) => Child;
+
+export type CustomFieldProps<V> = FieldContext<V>;

@@ -12,7 +12,7 @@ import { useFieldContext, FieldContext } from './contexts/FieldContext';
 import { useFormErrors } from './hooks/useFormErrors';
 import { useFieldErrors } from './hooks/useFieldErrors';
 import { FormComponent, FormProps } from './types/Form';
-import { FieldComponent, FieldProps } from './types/Field';
+import { FieldComponent, FieldProps, CustomFieldProps } from './types/Field';
 import {
   TextFieldComponent,
   TextFieldProps,
@@ -67,6 +67,7 @@ export type {
   FormContext,
   FieldProps,
   FieldContext,
+  CustomFieldProps,
   TextFieldProps,
   CustomTextFieldProps,
   TextAreaProps,

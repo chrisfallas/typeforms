@@ -1,5 +1,7 @@
 ---
 title: Custom Fields
+sidebar:
+  order: 3
 ---
 
 # Custom Fields
@@ -39,9 +41,9 @@ You will have to define your custom field component that can handle a field of t
 
 ```tsx
 import { ChangeEvent } from 'react';
-import { FieldContext } from 'typeforms';
+import { CustomFieldProps } from 'typeforms';
 
-interface FavoriteFruitsProps extends FieldContext<string[]> {} // It's important to define the type of fields your component can handle
+interface FavoriteFruitsProps extends CustomFieldProps<string[]> {} // It's important to define the type of fields your component can handle
 
 const FavoriteFruits = (props: FavoriteFruitsProps) => {
   const { value, setValue } = props;

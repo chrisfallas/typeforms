@@ -1,5 +1,7 @@
 ---
 title: Validations
+sidebar:
+  order: 4
 ---
 
 # Validations

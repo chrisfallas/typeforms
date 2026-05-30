@@ -6,11 +6,11 @@ sidebar:
 
 # Error
 
-The Error component renders a 
+The Error component renders an inline text message (`<span>`) that displays an error message for a specific field in a form.
 
 ## Props
 
-The `Field` component accepts the following props:
+The `Error` component accepts the following props:
 
 | Name                                                                                                 | Type                                   | Required                            | Default                                 |
 |------------------------------------------------------------------------------------------------------|----------------------------------------|-------------------------------------|-----------------------------------------|
